@@ -1,0 +1,279 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "pradftest"
+		},
+		"pallarConvert_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'pallarConvert'"
+		},
+		"pallarDemoBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'pallarDemoBlob'"
+		},
+		"pallar_DataLake_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'pallar_DataLake'"
+		},
+		"HDSFHIRService_Output_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+		},
+		"HDSFHIRService_Output_properties_typeProperties_aadResourceId": {
+			"type": "string",
+			"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com"
+		},
+		"HDSFhirService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com/"
+		},
+		"HDSFhirService_properties_typeProperties_aadResourceId": {
+			"type": "string",
+			"defaultValue": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com"
+		},
+		"pallar_DataLake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://pallardatalake.dfs.core.windows.net/"
+		},
+		"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+			"type": "string",
+			"defaultValue": "CCD"
+		},
+		"Convert CCDA trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate": {
+			"type": "string",
+			"defaultValue": "ADT_A01"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate": {
+			"type": "string",
+			"defaultValue": "ADT_A02"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+			"type": "string",
+			"defaultValue": "ADT_A01"
+		},
+		"Convert Hl7v2 trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+			"type": "string",
+			"defaultValue": "ExamplePatient"
+		},
+		"Convert JSON trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Unstructured Text -  Blob trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "pradftest_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"pallarConvert_connectionString": {
+						"value": "[parameters('pallarConvert_connectionString')]"
+					},
+					"pallarDemoBlob_connectionString": {
+						"value": "[parameters('pallarDemoBlob_connectionString')]"
+					},
+					"pallar_DataLake_accountKey": {
+						"value": "[parameters('pallar_DataLake_accountKey')]"
+					},
+					"HDSFHIRService_Output_properties_typeProperties_url": {
+						"value": "[parameters('HDSFHIRService_Output_properties_typeProperties_url')]"
+					},
+					"HDSFHIRService_Output_properties_typeProperties_aadResourceId": {
+						"value": "[parameters('HDSFHIRService_Output_properties_typeProperties_aadResourceId')]"
+					},
+					"HDSFhirService_properties_typeProperties_url": {
+						"value": "[parameters('HDSFhirService_properties_typeProperties_url')]"
+					},
+					"HDSFhirService_properties_typeProperties_aadResourceId": {
+						"value": "[parameters('HDSFhirService_properties_typeProperties_aadResourceId')]"
+					},
+					"pallar_DataLake_properties_typeProperties_url": {
+						"value": "[parameters('pallar_DataLake_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "pradftest_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFolder": {
+						"value": "[parameters('Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFolder')]"
+					},
+					"Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFile": {
+						"value": "[parameters('Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFile')]"
+					},
+					"Unstructured Text -  Blob trigger_properties_typeProperties_scope": {
+						"value": "[parameters('Unstructured Text -  Blob trigger_properties_typeProperties_scope')]"
+					},
+					"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+						"value": "[parameters('Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFolder')]"
+					},
+					"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+						"value": "[parameters('Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFile')]"
+					},
+					"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+						"value": "[parameters('Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_rootTemplate')]"
+					},
+					"Convert CCDA trigger_properties_typeProperties_scope": {
+						"value": "[parameters('Convert CCDA trigger_properties_typeProperties_scope')]"
+					},
+					"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder": {
+						"value": "[parameters('Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder')]"
+					},
+					"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile": {
+						"value": "[parameters('Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile')]"
+					},
+					"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate": {
+						"value": "[parameters('Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate')]"
+					},
+					"Convert Hl7v2 trigger - ADT_A01_properties_typeProperties_scope": {
+						"value": "[parameters('Convert Hl7v2 trigger - ADT_A01_properties_typeProperties_scope')]"
+					},
+					"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder": {
+						"value": "[parameters('Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder')]"
+					},
+					"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile": {
+						"value": "[parameters('Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile')]"
+					},
+					"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate": {
+						"value": "[parameters('Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate')]"
+					},
+					"Convert Hl7v2 trigger - ADT_A02_properties_typeProperties_scope": {
+						"value": "[parameters('Convert Hl7v2 trigger - ADT_A02_properties_typeProperties_scope')]"
+					},
+					"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+						"value": "[parameters('Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFolder')]"
+					},
+					"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+						"value": "[parameters('Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFile')]"
+					},
+					"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+						"value": "[parameters('Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_rootTemplate')]"
+					},
+					"Convert Hl7v2 trigger_properties_typeProperties_scope": {
+						"value": "[parameters('Convert Hl7v2 trigger_properties_typeProperties_scope')]"
+					},
+					"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+						"value": "[parameters('Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFolder')]"
+					},
+					"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+						"value": "[parameters('Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFile')]"
+					},
+					"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+						"value": "[parameters('Convert JSON trigger_properties_All Converters - Blob trigger_parameters_rootTemplate')]"
+					},
+					"Convert JSON trigger_properties_typeProperties_scope": {
+						"value": "[parameters('Convert JSON trigger_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'pradftest_ArmTemplate_0')]"
+			]
+		}
+	]
+}

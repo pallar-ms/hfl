@@ -1,0 +1,102 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "pradftest"
+		},
+		"pallarConvert_connectionString": {
+			"value": ""
+		},
+		"pallarDemoBlob_connectionString": {
+			"value": ""
+		},
+		"pallar_DataLake_accountKey": {
+			"value": ""
+		},
+		"HDSFHIRService_Output_properties_typeProperties_url": {
+			"value": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+		},
+		"HDSFHIRService_Output_properties_typeProperties_aadResourceId": {
+			"value": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com"
+		},
+		"HDSFhirService_properties_typeProperties_url": {
+			"value": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com/"
+		},
+		"HDSFhirService_properties_typeProperties_aadResourceId": {
+			"value": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com"
+		},
+		"pallar_DataLake_properties_typeProperties_url": {
+			"value": "https://pallardatalake.dfs.core.windows.net/"
+		},
+		"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+			"value": "@triggerBody().folderPath"
+		},
+		"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+			"value": "@triggerBody().fileName"
+		},
+		"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+			"value": "CCD"
+		},
+		"Convert CCDA trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder": {
+			"value": "@triggerBody().folderPath"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile": {
+			"value": "@triggerBody().fileName"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate": {
+			"value": "ADT_A01"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_typeProperties_scope": {
+			"value": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder": {
+			"value": "@triggerBody().folderPath"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile": {
+			"value": "@triggerBody().fileName"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate": {
+			"value": "ADT_A02"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_typeProperties_scope": {
+			"value": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+			"value": "@triggerBody().folderPath"
+		},
+		"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+			"value": "@triggerBody().fileName"
+		},
+		"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+			"value": "ADT_A01"
+		},
+		"Convert Hl7v2 trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+			"value": "@triggerBody().folderPath"
+		},
+		"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+			"value": "@triggerBody().fileName"
+		},
+		"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+			"value": "ExamplePatient"
+		},
+		"Convert JSON trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFolder": {
+			"value": "@triggerBody().folderPath"
+		},
+		"Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFile": {
+			"value": "@triggerBody().fileName"
+		},
+		"Unstructured Text -  Blob trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		}
+	}
+}

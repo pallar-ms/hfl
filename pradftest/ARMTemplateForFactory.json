@@ -1,0 +1,3482 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "pradftest"
+		},
+		"pallarConvert_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'pallarConvert'"
+		},
+		"pallarDemoBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'pallarDemoBlob'"
+		},
+		"pallar_DataLake_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'pallar_DataLake'"
+		},
+		"HDSFHIRService_Output_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+		},
+		"HDSFHIRService_Output_properties_typeProperties_aadResourceId": {
+			"type": "string",
+			"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com"
+		},
+		"HDSFhirService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com/"
+		},
+		"HDSFhirService_properties_typeProperties_aadResourceId": {
+			"type": "string",
+			"defaultValue": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com"
+		},
+		"pallar_DataLake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://pallardatalake.dfs.core.windows.net/"
+		},
+		"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+			"type": "string",
+			"defaultValue": "CCD"
+		},
+		"Convert CCDA trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate": {
+			"type": "string",
+			"defaultValue": "ADT_A01"
+		},
+		"Convert Hl7v2 trigger - ADT_A01_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate": {
+			"type": "string",
+			"defaultValue": "ADT_A02"
+		},
+		"Convert Hl7v2 trigger - ADT_A02_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+			"type": "string",
+			"defaultValue": "ADT_A01"
+		},
+		"Convert Hl7v2 trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Convert JSON trigger_properties_All Converters - Blob trigger_parameters_rootTemplate": {
+			"type": "string",
+			"defaultValue": "ExamplePatient"
+		},
+		"Convert JSON trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		},
+		"Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFolder": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Unstructured Text -  Blob trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/All Converters - Blob trigger')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Read input data",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Read from Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.storageAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.storageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@pipeline().parameters.storageFile",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Write result to Blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Converter",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Write to Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.storageAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.outputStorageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@{pipeline().parameters.storageFile}_@{utcnow()}.json",
+									"type": "Expression"
+								},
+								"fileContent": {
+									"value": "@variables('convertedResult')",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Write result to Data Lake",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Converter",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Write to Data Lake",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.dataLakeAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.outputStorageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@{pipeline().parameters.storageFile}_@{utcnow()}.json",
+									"type": "Expression"
+								},
+								"fileContent": {
+									"value": "@variables('convertedResult')",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Lookup Data Lake Data",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Write result to Data Lake",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.json",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "Convert_Results_DataLake",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Converter",
+						"type": "Switch",
+						"dependsOn": [
+							{
+								"activity": "Read input data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"on": {
+								"value": "@pipeline().TriggerName",
+								"type": "Expression"
+							},
+							"cases": [
+								{
+									"value": "Convert Hl7v2 trigger",
+									"activities": [
+										{
+											"name": "HL7V2-FHIR_R4 Converter Activity",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "HL7V2-FHIR_R4 Converter",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {
+													"fhirService": {
+														"value": "@pipeline().parameters.fhirService",
+														"type": "Expression"
+													},
+													"acrServer": {
+														"value": "@pipeline().parameters.acrServer",
+														"type": "Expression"
+													},
+													"inputData": {
+														"value": "@activity('Read input data').output.pipelineReturnValue.inputData",
+														"type": "Expression"
+													},
+													"rootTemplate": {
+														"value": "@pipeline().parameters.rootTemplate",
+														"type": "Expression"
+													}
+												}
+											}
+										},
+										{
+											"name": "Set Hl7v2-FHIR_R4 converted result",
+											"type": "SetVariable",
+											"dependsOn": [
+												{
+													"activity": "HL7V2-FHIR_R4 Converter Activity",
+													"dependencyConditions": [
+														"Succeeded"
+													]
+												}
+											],
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "convertedResult",
+												"value": {
+													"value": "@string(activity('HL7V2-FHIR_R4 Converter Activity').output.pipelineReturnValue.convertResult)",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"value": "Convert JSON trigger",
+									"activities": [
+										{
+											"name": "JSON-FHIR_R4 Converter Activity",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "JSON-FHIR_R4 Converter",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {
+													"fhirService": {
+														"value": "@pipeline().parameters.fhirService",
+														"type": "Expression"
+													},
+													"acrServer": {
+														"value": "@pipeline().parameters.acrServer",
+														"type": "Expression"
+													},
+													"inputData": {
+														"value": "@activity('Read input data').output.pipelineReturnValue.inputData",
+														"type": "Expression"
+													}
+												}
+											}
+										},
+										{
+											"name": "Set JSON-FHIR_R4 converted result",
+											"type": "SetVariable",
+											"dependsOn": [
+												{
+													"activity": "JSON-FHIR_R4 Converter Activity",
+													"dependencyConditions": [
+														"Succeeded"
+													]
+												}
+											],
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "convertedResult",
+												"value": {
+													"value": "@string(activity('JSON-FHIR_R4 Converter Activity').output.pipelineReturnValue.convertResult)",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"value": "Convert CCDA trigger",
+									"activities": [
+										{
+											"name": "CCDA-FHIR_R4 Converter Activity",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "CCDA-FHIR_R4 Converter",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {
+													"fhirService": {
+														"value": "@pipeline().parameters.fhirService",
+														"type": "Expression"
+													},
+													"acrServer": {
+														"value": "@pipeline().parameters.acrServer",
+														"type": "Expression"
+													},
+													"inputData": {
+														"value": "@activity('Read input data').output.pipelineReturnValue.inputData",
+														"type": "Expression"
+													},
+													"rootTemplate": {
+														"value": "@pipeline().parameters.rootTemplate",
+														"type": "Expression"
+													}
+												}
+											}
+										},
+										{
+											"name": "Set CCDA-FHIR_R4 converted result",
+											"type": "SetVariable",
+											"dependsOn": [
+												{
+													"activity": "CCDA-FHIR_R4 Converter Activity",
+													"dependencyConditions": [
+														"Succeeded"
+													]
+												}
+											],
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "convertedResult",
+												"value": {
+													"value": "@string(activity('CCDA-FHIR_R4 Converter Activity').output.pipelineReturnValue.convertResult)",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							],
+							"defaultActivities": [
+								{
+									"name": "Set converted result",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "convertedResult",
+										"value": {
+											"value": "@activity('Read input data').output.pipelineReturnValue.inputData",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fhirService": {
+						"type": "string",
+						"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+					},
+					"acrServer": {
+						"type": "string",
+						"defaultValue": "pallar.azurecr.io"
+					},
+					"storageAccount": {
+						"type": "string",
+						"defaultValue": "https://pallardts.blob.core.windows.net"
+					},
+					"storageFolder": {
+						"type": "string",
+						"defaultValue": "convert-samples/hl7v2"
+					},
+					"storageFile": {
+						"type": "string",
+						"defaultValue": "ADT-A01-01.hl7"
+					},
+					"outputStorageFolder": {
+						"type": "string",
+						"defaultValue": "convert-results/hl7v2"
+					},
+					"dataLakeAccount": {
+						"type": "string",
+						"defaultValue": "https://pallardatalake.blob.core.windows.net"
+					},
+					"rootTemplate": {
+						"type": "string",
+						"defaultValue": "ADT_A01"
+					}
+				},
+				"variables": {
+					"convertedResult": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "HFL/ETL Pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-23T20:07:32Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Read from Blob')]",
+				"[concat(variables('factoryId'), '/pipelines/Write to Blob')]",
+				"[concat(variables('factoryId'), '/pipelines/Write to Data Lake')]",
+				"[concat(variables('factoryId'), '/datasets/Convert_Results_DataLake')]",
+				"[concat(variables('factoryId'), '/pipelines/HL7V2-FHIR_R4 Converter')]",
+				"[concat(variables('factoryId'), '/pipelines/JSON-FHIR_R4 Converter')]",
+				"[concat(variables('factoryId'), '/pipelines/CCDA-FHIR_R4 Converter')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Analyze Unstructured Data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "AnalyzeText",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Construct analysis input",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@pipeline().parameters.cognitiveServiceUrl",
+								"type": "Expression"
+							},
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json",
+								"Ocp-Apim-Subscription-Key": {
+									"value": "@pipeline().parameters.ocpApimSubscriptionKey",
+									"type": "Expression"
+								}
+							},
+							"body": {
+								"value": "{\"analysisInput\":{\"documents\":@{variables('inputDocuments')}},\"tasks\":[{\"taskId\":\"analyze 1\",\"kind\":\"Healthcare\",\"parameters\":{\"fhirVersion\":\"4.0.1\"}}]}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Until Job Completion",
+						"type": "Until",
+						"dependsOn": [
+							{
+								"activity": "AnalyzeText",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(activity('Get Text Analysis Job Result').output.tasks.completed, activity('Get Text Analysis Job Result').output.tasks.total)",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Get Text Analysis Job Result",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@activity('AnalyzeText').output.ADFWebActivityResponseHeaders['operation-location']",
+											"type": "Expression"
+										},
+										"method": "GET",
+										"headers": {
+											"Content-Type": "application/json",
+											"Ocp-Apim-Subscription-Key": {
+												"value": "@pipeline().parameters.ocpApimSubscriptionKey",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							],
+							"timeout": "0.12:00:00"
+						}
+					},
+					{
+						"name": "Set output results",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Extract FHIR bundles generated",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "fhirBundlesOutput",
+									"value": {
+										"type": "Expression",
+										"content": "@variables('fhirBundlesOutput')"
+									}
+								},
+								{
+									"key": "rawTA4HOutput",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('Get Text Analysis Job Result').output"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					},
+					{
+						"name": "Extract FHIR bundles generated",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Until Job Completion",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [
+							{
+								"name": "r",
+								"value": "rr"
+							}
+						],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Text Analysis Job Result').output.tasks.items[0].results.documents",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Append variable1",
+									"type": "AppendVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "fhirBundlesOutput",
+										"value": {
+											"value": "@item().fhirBundle",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Construct analysis input",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.inputData",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Append document",
+									"type": "AppendVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "inputDocuments",
+										"value": {
+											"value": "@json(concat('{\"text\": \"', item(), '\", \"language\": \"en\", \"id\": \"', string(rand(1, 1000)), '\"}'))",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"cognitiveServiceUrl": {
+						"type": "string",
+						"defaultValue": "https://pr-ta4h-demo-eastus.cognitiveservices.azure.com/language/analyze-text/jobs?api-version=2022-05-15-preview"
+					},
+					"inputData": {
+						"type": "array",
+						"defaultValue": [
+							"The doctor prescribed 200mg Ibuprofen."
+						]
+					},
+					"ocpApimSubscriptionKey": {
+						"type": "string",
+						"defaultValue": "9d29014a68424284be9568150b75092a"
+					}
+				},
+				"variables": {
+					"fhirBundlesOutput": {
+						"type": "Array"
+					},
+					"inputDocuments": {
+						"type": "Array"
+					},
+					"analysisInput": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "HFL/1. Transform/TA4H"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-23T19:00:36Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CCDA-FHIR_R4 Converter')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CCDA-FHIR_R4",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Generic Converter",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"fhirService": {
+									"value": "@pipeline().parameters.fhirService",
+									"type": "Expression"
+								},
+								"acrServer": {
+									"value": "@pipeline().parameters.acrServer",
+									"type": "Expression"
+								},
+								"templateReference": "ccdatemplates:default",
+								"inputData": {
+									"value": "@pipeline().parameters.inputData",
+									"type": "Expression"
+								},
+								"inputDataType": "CCDA",
+								"rootTemplate": {
+									"value": "@pipeline().parameters.rootTemplate",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Set converted result",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "CCDA-FHIR_R4",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "convertResult",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('CCDA-FHIR_R4').output.pipelineReturnValue.convertResult"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					},
+					{
+						"name": "Set converted error",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "CCDA-FHIR_R4",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "convertError",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('CCDA-FHIR_R4').output.pipelineReturnValue.convertError"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fhirService": {
+						"type": "string",
+						"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+					},
+					"acrServer": {
+						"type": "string",
+						"defaultValue": "microsofthealth"
+					},
+					"inputData": {
+						"type": "string"
+					},
+					"rootTemplate": {
+						"type": "string",
+						"defaultValue": "CCD"
+					}
+				},
+				"folder": {
+					"name": "HFL/1. Transform/Convert/Specific Converters"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-23T21:51:26Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Generic Converter')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Generic Converter')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Convert",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.fhirService, '$convert-data')",
+								"type": "Expression"
+							},
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "{\n    \"resourceType\": \"Parameters\",\n    \"parameter\": [\n        {\n            \"name\": \"inputData\",\n            \"valueString\": \"@{pipeline().parameters.inputData}\"\n        },\n        {\n            \"name\": \"inputDataType\",\n            \"valueString\": \"@{pipeline().parameters.inputDataType}\"\n        },\n        {\n            \"name\": \"templateCollectionReference\",\n            \"valueString\": \"@{pipeline().parameters.acrServer}/@{pipeline().parameters.templateReference}\"\n        },\n        {\n            \"name\": \"rootTemplate\",\n            \"valueString\": \"@{pipeline().parameters.rootTemplate}\"\n        }\n    ]\n}",
+								"type": "Expression"
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": {
+									"value": "@pipeline().parameters.fhirService",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Set converted result",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Convert",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "convertResult",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('Convert').output"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					},
+					{
+						"name": "Set converted error",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Convert",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "convertError",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('Convert').output.issue"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fhirService": {
+						"type": "String",
+						"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+					},
+					"acrServer": {
+						"type": "string",
+						"defaultValue": "pallar.azurecr.io"
+					},
+					"templateReference": {
+						"type": "string",
+						"defaultValue": "hl7v2-v5.1:020701"
+					},
+					"inputData": {
+						"type": "string",
+						"defaultValue": "MSH|^~\\\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508131015||ADT^A01|517|T|2.3|||AL||44|ASCII\\nEVN|A01|20200508131015|||C005^Whittingham^Sylvia^^^Dr^^^DRNBR^PRSNL^^^ORGDR|\\nPID|1|3735064194^^^SIMULATOR MRN^MRN|3735064194^^^SIMULATOR MRN^MRN~2021051528^^^NHSNBR^NHSNMBR||Kinmonth^Joanna^Chelsea^^Ms^^CURRENT||19870624000000|F|||89 Transaction House^Handmaiden Street^Wembley^^FV75 4GJ^GBR^HOME||020 3614 5541^HOME|||||||||C^White - Other^^^||||||||\\nPD1|||FAMILY PRACTICE^^12345|\\nPV1|1|I|OtherWard^MainRoom^Bed 183^Simulated Hospital^^BED^Main Building^4|28b|||C005^Whittingham^Sylvia^^^Dr^^^DRNBR^PRSNL^^^ORGDR|||CAR|||||||||16094728916771313876^^^^visitid||||||||||||||||||||||ARRIVED|||20200508131015||"
+					},
+					"inputDataType": {
+						"type": "string",
+						"defaultValue": "Hl7v2"
+					},
+					"rootTemplate": {
+						"type": "string",
+						"defaultValue": "ADT_A01"
+					}
+				},
+				"folder": {
+					"name": "HFL/1. Transform/Convert"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-23T21:51:25Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HL7V2-FHIR_R4 Converter - Blob trigger')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Read input data",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Read from Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.storageAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.storageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@pipeline().parameters.storageFile",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "HL7V2-FHIR_R4 Converter",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Read input data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "HL7V2-FHIR_R4 Converter",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"fhirService": {
+									"value": "@pipeline().parameters.fhirService",
+									"type": "Expression"
+								},
+								"acrServer": {
+									"value": "@pipeline().parameters.acrServer",
+									"type": "Expression"
+								},
+								"inputData": {
+									"value": "@activity('Read input data').output.pipelineReturnValue.inputData",
+									"type": "Expression"
+								},
+								"rootTemplate": {
+									"value": "@pipeline().parameters.rootTemplate",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Write result to Blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "HL7V2-FHIR_R4 Converter",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Write to Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.storageAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.outputStorageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@{pipeline().parameters.storageFile}_@{utcnow()}.json",
+									"type": "Expression"
+								},
+								"fileContent": {
+									"value": "@activity('HL7V2-FHIR_R4 Converter').output.pipelineReturnValue.convertResult",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Write result to Data Lake",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "HL7V2-FHIR_R4 Converter",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Write to Data Lake",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.dataLakeAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.outputStorageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@{pipeline().parameters.storageFile}_@{utcnow()}.json",
+									"type": "Expression"
+								},
+								"fileContent": {
+									"value": "@activity('HL7V2-FHIR_R4 Converter').output.pipelineReturnValue.convertResult",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Lookup Data Lake Data",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Write result to Data Lake",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.json",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "Convert_Results_DataLake",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Write errors to Data Lake",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "HL7V2-FHIR_R4 Converter",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Write to Data Lake",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.dataLakeAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.errorStorageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@{pipeline().parameters.storageFile}_@{utcnow()}.json",
+									"type": "Expression"
+								},
+								"fileContent": {
+									"value": "@activity('HL7V2-FHIR_R4 Converter').output.pipelineReturnValue.convertError",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fhirService": {
+						"type": "string",
+						"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+					},
+					"acrServer": {
+						"type": "string",
+						"defaultValue": "pallar.azurecr.io"
+					},
+					"storageAccount": {
+						"type": "string",
+						"defaultValue": "https://pallardts.blob.core.windows.net"
+					},
+					"storageFolder": {
+						"type": "string",
+						"defaultValue": "convert-samples/hl7v2"
+					},
+					"storageFile": {
+						"type": "string",
+						"defaultValue": "ADT-A01-00.hl7"
+					},
+					"outputStorageFolder": {
+						"type": "string",
+						"defaultValue": "convert-results/hl7v2"
+					},
+					"dataLakeAccount": {
+						"type": "string",
+						"defaultValue": "https://pallardatalake.blob.core.windows.net"
+					},
+					"rootTemplate": {
+						"type": "string",
+						"defaultValue": "ADT_A01"
+					},
+					"errorStorageFolder": {
+						"type": "string",
+						"defaultValue": "errors/hl7-v2"
+					}
+				},
+				"folder": {
+					"name": "HFL/ETL Pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-23T21:51:27Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Read from Blob')]",
+				"[concat(variables('factoryId'), '/pipelines/HL7V2-FHIR_R4 Converter')]",
+				"[concat(variables('factoryId'), '/pipelines/Write to Blob')]",
+				"[concat(variables('factoryId'), '/pipelines/Write to Data Lake')]",
+				"[concat(variables('factoryId'), '/datasets/Convert_Results_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HL7V2-FHIR_R4 Converter')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "HL7V2-FHIR_R4",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Generic Converter",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"fhirService": {
+									"value": "@pipeline().parameters.fhirService",
+									"type": "Expression"
+								},
+								"acrServer": {
+									"value": "@pipeline().parameters.acrServer",
+									"type": "Expression"
+								},
+								"templateReference": "hl7v2-v5.1:020701",
+								"inputData": {
+									"value": "@pipeline().parameters.inputData",
+									"type": "Expression"
+								},
+								"inputDataType": "Hl7v2",
+								"rootTemplate": {
+									"value": "@pipeline().parameters.rootTemplate",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Set converted result",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "HL7V2-FHIR_R4",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "convertResult",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('HL7V2-FHIR_R4').output.pipelineReturnValue.convertResult"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					},
+					{
+						"name": "Set converted error",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "HL7V2-FHIR_R4",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "convertError",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('HL7V2-FHIR_R4').output.pipelineReturnValue.convertError"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fhirService": {
+						"type": "string",
+						"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+					},
+					"acrServer": {
+						"type": "string",
+						"defaultValue": "pallar.azurecr.io"
+					},
+					"inputData": {
+						"type": "string",
+						"defaultValue": "MSH|^~\\\\&|SIMHOSP|SFAC|RAPP|RFAC|20200508131015||ADT^A01|517|T|2.3|||AL||44|ASCII\\nEVN|A01|20200508131015|||C005^Whittingham^Sylvia^^^Dr^^^DRNBR^PRSNL^^^ORGDR|\\nPID|1|3735064194^^^SIMULATOR MRN^MRN|3735064194^^^SIMULATOR MRN^MRN~2021051528^^^NHSNBR^NHSNMBR||Kinmonth^Joanna^Chelsea^^Ms^^CURRENT||19870624000000|F|||89 Transaction House^Handmaiden Street^Wembley^^FV75 4GJ^GBR^HOME||020 3614 5541^HOME|||||||||C^White - Other^^^||||||||\\nPD1|||FAMILY PRACTICE^^12345|\\nPV1|1|I|OtherWard^MainRoom^Bed 183^Simulated Hospital^^BED^Main Building^4|28b|||C005^Whittingham^Sylvia^^^Dr^^^DRNBR^PRSNL^^^ORGDR|||CAR|||||||||16094728916771313876^^^^visitid||||||||||||||||||||||ARRIVED|||20200508131015||"
+					},
+					"rootTemplate": {
+						"type": "string",
+						"defaultValue": "ADT_A01"
+					}
+				},
+				"folder": {
+					"name": "HFL/1. Transform/Convert/Specific Converters"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-23T21:51:27Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Generic Converter')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/JSON-FHIR_R4 Converter')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "JSON-FHIR_R4",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Generic Converter",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"fhirService": {
+									"value": "@pipeline().parameters.fhirService",
+									"type": "Expression"
+								},
+								"acrServer": {
+									"value": "@pipeline().parameters.acrServer",
+									"type": "Expression"
+								},
+								"templateReference": "jsontemplates:default",
+								"inputData": {
+									"value": "@pipeline().parameters.inputData",
+									"type": "Expression"
+								},
+								"inputDataType": "JSON",
+								"rootTemplate": {
+									"value": "@pipeline().parameters.rootTemplate",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Set converted result",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "JSON-FHIR_R4",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "convertResult",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('JSON-FHIR_R4').output.pipelineReturnValue.convertResult"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					},
+					{
+						"name": "Set converted error",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "JSON-FHIR_R4",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "convertError",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('JSON-FHIR_R4').output.pipelineReturnValue.convertError"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fhirService": {
+						"type": "string",
+						"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+					},
+					"acrServer": {
+						"type": "string",
+						"defaultValue": "microsofthealth"
+					},
+					"inputData": {
+						"type": "string",
+						"defaultValue": "{\\\"PatientId\\\":12434,\\\"MRN\\\":\\\"M0R1N2\\\",\\\"FirstName\\\":\\\"Jerry\\\",\\\"LastName\\\":\\\"Smith\\\",\\\"Phone Number\\\":[\\\"1234-5678\\\",\\\"1234-5679\\\"],\\\"Gender\\\":\\\"M\\\",\\\"DOB\\\":\\\"20010110\\\"}"
+					},
+					"rootTemplate": {
+						"type": "string",
+						"defaultValue": "ExamplePatient"
+					}
+				},
+				"folder": {
+					"name": "HFL/1. Transform/Convert/Specific Converters"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-23T21:51:26Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Generic Converter')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Read from Blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Storage Files",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.storageAccount,'/',pipeline().parameters.storageFolder,'/',pipeline().parameters.storageFile)",
+								"type": "Expression"
+							},
+							"method": "GET",
+							"headers": {
+								"x-ms-blob-type": "BlockBlob",
+								"x-ms-version": "2017-11-09"
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://storage.azure.com/"
+							}
+						}
+					},
+					{
+						"name": "Set input data",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Get Storage Files",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "inputData",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('Get Storage Files').output.Response"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"storageAccount": {
+						"type": "string",
+						"defaultValue": "https://pallardts.blob.core.windows.net"
+					},
+					"storageFolder": {
+						"type": "string",
+						"defaultValue": "convert-samples/hl7v2"
+					},
+					"storageFile": {
+						"type": "string",
+						"defaultValue": "ADT-A01-01.hl7"
+					}
+				},
+				"folder": {
+					"name": "HFL/0. Extract"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-22T20:40:53Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Unstructured Text Analysis - FHIR_R4 - Blob trigger')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Read input data",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Read from Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.storageAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.storageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@pipeline().parameters.storageFile",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Text Analysis for Healthcare",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Read input data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Analyze Unstructured Data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"cognitiveServiceUrl": {
+									"value": "@pipeline().parameters.cognitiveServiceUrl",
+									"type": "Expression"
+								},
+								"inputData": {
+									"value": "@array(split(activity('Read input data').output.pipelineReturnValue.inputData, '---'))",
+									"type": "Expression"
+								},
+								"ocpApimSubscriptionKey": {
+									"value": "@pipeline().parameters.ocpApimSubscriptionKey",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Write raw TA4H result to Blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Text Analysis for Healthcare",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Write to Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.storageAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.outputStorageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@{pipeline().parameters.storageFile}_rawTA4HOutput_@{utcnow()}.json",
+									"type": "Expression"
+								},
+								"fileContent": {
+									"value": "@activity('Text Analysis for Healthcare').output.pipelineReturnValue.rawTA4HOutput",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Write raw TA4H result to Data Lake",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Text Analysis for Healthcare",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Write to Data Lake",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.dataLakeAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.outputStorageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@{pipeline().parameters.storageFile}_rawTA4HOutput_@{utcnow()}.json",
+									"type": "Expression"
+								},
+								"fileContent": {
+									"value": "@activity('Text Analysis for Healthcare').output.pipelineReturnValue.rawTA4HOutput",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Write FHIR bundles result to Blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Write raw TA4H result to Blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Write to Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.storageAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.outputStorageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@{pipeline().parameters.storageFile}_fhirBundlesOutput_@{utcnow()}.json",
+									"type": "Expression"
+								},
+								"fileContent": {
+									"value": "@activity('Text Analysis for Healthcare').output.pipelineReturnValue.fhirBundlesOutput",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Write FHIR bundles result to Data Lake",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Write raw TA4H result to Data Lake",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Write to Data Lake",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"storageAccount": {
+									"value": "@pipeline().parameters.dataLakeAccount",
+									"type": "Expression"
+								},
+								"storageFolder": {
+									"value": "@pipeline().parameters.outputStorageFolder",
+									"type": "Expression"
+								},
+								"storageFile": {
+									"value": "@{pipeline().parameters.storageFile}_fhirBundlesOutput_@{utcnow()}.json",
+									"type": "Expression"
+								},
+								"fileContent": {
+									"value": "@activity('Text Analysis for Healthcare').output.pipelineReturnValue.fhirBundlesOutput",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"storageAccount": {
+						"type": "string",
+						"defaultValue": "https://pallardts.blob.core.windows.net"
+					},
+					"storageFolder": {
+						"type": "string",
+						"defaultValue": "ta4h-samples"
+					},
+					"storageFile": {
+						"type": "string",
+						"defaultValue": "DEMO PROGRESS NOTE.txt"
+					},
+					"outputStorageFolder": {
+						"type": "string",
+						"defaultValue": "ta4h-results"
+					},
+					"dataLakeAccount": {
+						"type": "string",
+						"defaultValue": "https://pallardatalake.blob.core.windows.net"
+					},
+					"cognitiveServiceUrl": {
+						"type": "string",
+						"defaultValue": "https://pr-ta4h-demo-eastus.cognitiveservices.azure.com/language/analyze-text/jobs?api-version=2022-05-15-preview"
+					},
+					"ocpApimSubscriptionKey": {
+						"type": "string",
+						"defaultValue": "9d29014a68424284be9568150b75092a"
+					}
+				},
+				"folder": {
+					"name": "HFL/ETL Pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-23T19:27:26Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Read from Blob')]",
+				"[concat(variables('factoryId'), '/pipelines/Analyze Unstructured Data')]",
+				"[concat(variables('factoryId'), '/pipelines/Write to Blob')]",
+				"[concat(variables('factoryId'), '/pipelines/Write to Data Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Validate')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Validate",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.fhirService, pipeline().parameters.fhirResource.resourceType, '/$validate')",
+								"type": "Expression"
+							},
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "@pipeline().parameters.fhirResource",
+								"type": "Expression"
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": {
+									"value": "@pipeline().parameters.fhirService",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Set validation result",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Validate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "validationCode",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('Validate').output.issue[0].code"
+									}
+								},
+								{
+									"key": "validationDiagnostics",
+									"value": {
+										"type": "Expression",
+										"content": "@activity('Validate').output.issue[0].diagnostics"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fhirService": {
+						"type": "String",
+						"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+					},
+					"fhirResource": {
+						"type": "object"
+					}
+				},
+				"folder": {
+					"name": "HFL/1. Transform/Validate"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-23T21:17:49Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Write to Blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Save output to Blob",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.storageAccount,'/',pipeline().parameters.storageFolder,'/',pipeline().parameters.storageFile)",
+								"type": "Expression"
+							},
+							"method": "PUT",
+							"headers": {
+								"x-ms-blob-type": "BlockBlob",
+								"x-ms-version": "2017-11-09"
+							},
+							"body": {
+								"value": "@pipeline().parameters.fileContent",
+								"type": "Expression"
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://storage.azure.com/"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"storageAccount": {
+						"type": "string",
+						"defaultValue": "https://pallardts.blob.core.windows.net"
+					},
+					"storageFolder": {
+						"type": "string",
+						"defaultValue": "convert-results/hl7v2"
+					},
+					"storageFile": {
+						"type": "string"
+					},
+					"fileContent": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "HFL/2. Load"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-22T20:40:53Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Write to Data Lake')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Save output to Data Lake",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@concat(pipeline().parameters.storageAccount,'/',pipeline().parameters.storageFolder,'/',pipeline().parameters.storageFile)",
+								"type": "Expression"
+							},
+							"method": "PUT",
+							"headers": {
+								"x-ms-blob-type": "BlockBlob",
+								"x-ms-version": "2017-11-09"
+							},
+							"body": {
+								"value": "@pipeline().parameters.fileContent",
+								"type": "Expression"
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://storage.azure.com/"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"storageAccount": {
+						"type": "string",
+						"defaultValue": "https://pallardatalake.blob.core.windows.net"
+					},
+					"storageFolder": {
+						"type": "string",
+						"defaultValue": "convert-results/hl7v2"
+					},
+					"storageFile": {
+						"type": "string"
+					},
+					"fileContent": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "HFL/2. Load"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-22T20:40:53Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Write to HDS FHIR Service')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Save output to FHIR Service",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@pipeline().parameters.fhirService",
+								"type": "Expression"
+							},
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "@pipeline().parameters.fhirResource",
+								"type": "Expression"
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": {
+									"value": "@pipeline().parameters.fhirService",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fhirService": {
+						"type": "string",
+						"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+					},
+					"fhirResource": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "HFL/2. Load"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-23T16:50:24Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Bundle')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HDSFhirService",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Random"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/HDSFhirService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Convert_Results_Blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pallarConvert",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Convert"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "convert-results"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"resourceType": {
+							"type": "string"
+						},
+						"type": {
+							"type": "string"
+						},
+						"timestamp": {
+							"type": "string"
+						},
+						"identifier": {
+							"type": "object",
+							"properties": {
+								"value": {
+									"type": "string"
+								}
+							}
+						},
+						"id": {
+							"type": "string"
+						},
+						"entry": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"fullUrl": {
+										"type": "string"
+									},
+									"resource": {
+										"type": "object",
+										"properties": {
+											"resourceType": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"source": {
+												"type": "object",
+												"properties": {
+													"name": {
+														"type": "string"
+													},
+													"_endpoint": {
+														"type": "object",
+														"properties": {
+															"extension": {
+																"type": "array",
+																"items": {
+																	"type": "object",
+																	"properties": {
+																		"url": {
+																			"type": "string"
+																		},
+																		"valueCode": {
+																			"type": "string"
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											},
+											"destination": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"name": {
+															"type": "string"
+														},
+														"_endpoint": {
+															"type": "object",
+															"properties": {
+																"extension": {
+																	"type": "array",
+																	"items": {
+																		"type": "object",
+																		"properties": {
+																			"url": {
+																				"type": "string"
+																			},
+																			"valueCode": {
+																				"type": "string"
+																			}
+																		}
+																	}
+																}
+															}
+														},
+														"receiver": {
+															"type": "object",
+															"properties": {
+																"reference": {
+																	"type": "string"
+																}
+															}
+														}
+													}
+												}
+											},
+											"meta": {
+												"type": "object",
+												"properties": {
+													"tag": {
+														"type": "array",
+														"items": {
+															"type": "object",
+															"properties": {
+																"code": {
+																	"type": "string"
+																},
+																"system": {
+																	"type": "string"
+																}
+															}
+														}
+													}
+												}
+											},
+											"eventCoding": {
+												"type": "object",
+												"properties": {
+													"code": {
+														"type": "string"
+													},
+													"system": {
+														"type": "string"
+													},
+													"display": {
+														"type": "string"
+													}
+												}
+											},
+											"sender": {
+												"type": "object",
+												"properties": {
+													"reference": {
+														"type": "string"
+													}
+												}
+											}
+										}
+									},
+									"request": {
+										"type": "object",
+										"properties": {
+											"method": {
+												"type": "string"
+											},
+											"url": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"ADFWebActivityResponseHeaders": {
+							"type": "object",
+							"properties": {
+								"X-Request-ID": {
+									"type": "string"
+								},
+								"X-Content-Type-Options": {
+									"type": "string"
+								},
+								"X-Frame-Options": {
+									"type": "string"
+								},
+								"Content-Security-Policy": {
+									"type": "string"
+								},
+								"Strict-Transport-Security": {
+									"type": "string"
+								},
+								"Date": {
+									"type": "string"
+								},
+								"Server": {
+									"type": "string"
+								},
+								"Content-Length": {
+									"type": "string"
+								},
+								"Content-Type": {
+									"type": "string"
+								}
+							}
+						},
+						"effectiveIntegrationRuntime": {
+							"type": "string"
+						},
+						"executionDuration": {
+							"type": "integer"
+						},
+						"durationInQueue": {
+							"type": "object",
+							"properties": {
+								"integrationRuntimeQueue": {
+									"type": "integer"
+								}
+							}
+						},
+						"billingReference": {
+							"type": "object",
+							"properties": {
+								"activityType": {
+									"type": "string"
+								},
+								"billableDuration": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"meterType": {
+												"type": "string"
+											},
+											"duration": {
+												"type": "number"
+											},
+											"unit": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/pallarConvert')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Convert_Results_DataLake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pallar_DataLake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Convert"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "convert-results"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"resourceType": {
+							"type": "string"
+						},
+						"type": {
+							"type": "string"
+						},
+						"timestamp": {
+							"type": "string"
+						},
+						"identifier": {
+							"type": "object",
+							"properties": {
+								"value": {
+									"type": "string"
+								}
+							}
+						},
+						"id": {
+							"type": "string"
+						},
+						"entry": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"fullUrl": {
+										"type": "string"
+									},
+									"resource": {
+										"type": "object",
+										"properties": {
+											"resourceType": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"source": {
+												"type": "object",
+												"properties": {
+													"name": {
+														"type": "string"
+													},
+													"_endpoint": {
+														"type": "object",
+														"properties": {
+															"extension": {
+																"type": "array",
+																"items": {
+																	"type": "object",
+																	"properties": {
+																		"url": {
+																			"type": "string"
+																		},
+																		"valueCode": {
+																			"type": "string"
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											},
+											"destination": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"name": {
+															"type": "string"
+														},
+														"_endpoint": {
+															"type": "object",
+															"properties": {
+																"extension": {
+																	"type": "array",
+																	"items": {
+																		"type": "object",
+																		"properties": {
+																			"url": {
+																				"type": "string"
+																			},
+																			"valueCode": {
+																				"type": "string"
+																			}
+																		}
+																	}
+																}
+															}
+														},
+														"receiver": {
+															"type": "object",
+															"properties": {
+																"reference": {
+																	"type": "string"
+																}
+															}
+														}
+													}
+												}
+											},
+											"meta": {
+												"type": "object",
+												"properties": {
+													"tag": {
+														"type": "array",
+														"items": {
+															"type": "object",
+															"properties": {
+																"code": {
+																	"type": "string"
+																},
+																"system": {
+																	"type": "string"
+																}
+															}
+														}
+													}
+												}
+											},
+											"eventCoding": {
+												"type": "object",
+												"properties": {
+													"code": {
+														"type": "string"
+													},
+													"system": {
+														"type": "string"
+													},
+													"display": {
+														"type": "string"
+													}
+												}
+											},
+											"sender": {
+												"type": "object",
+												"properties": {
+													"reference": {
+														"type": "string"
+													}
+												}
+											}
+										}
+									},
+									"request": {
+										"type": "object",
+										"properties": {
+											"method": {
+												"type": "string"
+											},
+											"url": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"ADFWebActivityResponseHeaders": {
+							"type": "object",
+							"properties": {
+								"X-Request-ID": {
+									"type": "string"
+								},
+								"X-Content-Type-Options": {
+									"type": "string"
+								},
+								"X-Frame-Options": {
+									"type": "string"
+								},
+								"Content-Security-Policy": {
+									"type": "string"
+								},
+								"Strict-Transport-Security": {
+									"type": "string"
+								},
+								"Date": {
+									"type": "string"
+								},
+								"Server": {
+									"type": "string"
+								},
+								"Content-Length": {
+									"type": "string"
+								},
+								"Content-Type": {
+									"type": "string"
+								}
+							}
+						},
+						"effectiveIntegrationRuntime": {
+							"type": "string"
+						},
+						"executionDuration": {
+							"type": "integer"
+						},
+						"durationInQueue": {
+							"type": "object",
+							"properties": {
+								"integrationRuntimeQueue": {
+									"type": "integer"
+								}
+							}
+						},
+						"billingReference": {
+							"type": "object",
+							"properties": {
+								"activityType": {
+									"type": "string"
+								},
+								"billableDuration": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"meterType": {
+												"type": "string"
+											},
+											"duration": {
+												"type": "number"
+											},
+											"unit": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"output": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/pallar_DataLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HDSFHIRPatients')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HDSFhirService",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Random"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": "Patient"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/HDSFhirService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HDSFHIRPatients_example')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HDSFhirService",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Random"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": "Patient?_id=example"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/HDSFhirService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HDSFHIRPatients_output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HDSFHIRService_Output",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Random"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": "Patient"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/HDSFHIRService_Output')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HDSFHIRPatients_output_example')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HDSFHIRService_Output",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Random"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": "Patient"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/HDSFHIRService_Output')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TA4HOutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pallarDemoBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Random"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "ta4hfhiroutput.json",
+						"container": "ta4h-output-adf"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"resourceType": {
+							"type": "string"
+						},
+						"id": {
+							"type": "string"
+						},
+						"meta": {
+							"type": "object",
+							"properties": {
+								"profile": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"identifier": {
+							"type": "object",
+							"properties": {
+								"system": {
+									"type": "string"
+								},
+								"value": {
+									"type": "string"
+								}
+							}
+						},
+						"type": {
+							"type": "string"
+						},
+						"entry": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"fullUrl": {
+										"type": "string"
+									},
+									"resource": {
+										"type": "object",
+										"properties": {
+											"resourceType": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"status": {
+												"type": "string"
+											},
+											"type": {
+												"type": "object",
+												"properties": {
+													"coding": {
+														"type": "array",
+														"items": {
+															"type": "object",
+															"properties": {
+																"system": {
+																	"type": "string"
+																},
+																"code": {
+																	"type": "string"
+																},
+																"display": {
+																	"type": "string"
+																}
+															}
+														}
+													},
+													"text": {
+														"type": "string"
+													}
+												}
+											},
+											"subject": {
+												"type": "object",
+												"properties": {
+													"reference": {
+														"type": "string"
+													},
+													"type": {
+														"type": "string"
+													}
+												}
+											},
+											"encounter": {
+												"type": "object",
+												"properties": {
+													"reference": {
+														"type": "string"
+													},
+													"type": {
+														"type": "string"
+													},
+													"display": {
+														"type": "string"
+													}
+												}
+											},
+											"date": {
+												"type": "string"
+											},
+											"author": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"reference": {
+															"type": "string"
+														},
+														"type": {
+															"type": "string"
+														},
+														"display": {
+															"type": "string"
+														}
+													}
+												}
+											},
+											"title": {
+												"type": "string"
+											},
+											"section": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"title": {
+															"type": "string"
+														},
+														"code": {
+															"type": "object",
+															"properties": {
+																"coding": {
+																	"type": "array",
+																	"items": {
+																		"type": "object",
+																		"properties": {
+																			"system": {
+																				"type": "string"
+																			},
+																			"display": {
+																				"type": "string"
+																			}
+																		}
+																	}
+																},
+																"text": {
+																	"type": "string"
+																}
+															}
+														},
+														"text": {
+															"type": "object",
+															"properties": {
+																"status": {
+																	"type": "string"
+																},
+																"div": {
+																	"type": "string"
+																}
+															}
+														},
+														"entry": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"reference": {
+																		"type": "string"
+																	},
+																	"type": {
+																		"type": "string"
+																	},
+																	"display": {
+																		"type": "string"
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/pallarDemoBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HDSFHIRService_Output')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('HDSFHIRService_Output_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "ManagedServiceIdentity",
+					"aadResourceId": "[parameters('HDSFHIRService_Output_properties_typeProperties_aadResourceId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HDSFhirService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('HDSFhirService_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "ManagedServiceIdentity",
+					"aadResourceId": "[parameters('HDSFhirService_properties_typeProperties_aadResourceId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pallarConvert')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('pallarConvert_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pallarDemoBlob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('pallarDemoBlob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pallar_DataLake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('pallar_DataLake_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('pallar_DataLake_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Convert CCDA trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "All Converters - Blob trigger",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"storageFolder": "[parameters('Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFolder')]",
+							"storageFile": "[parameters('Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_storageFile')]",
+							"rootTemplate": "[parameters('Convert CCDA trigger_properties_All Converters - Blob trigger_parameters_rootTemplate')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/convert-samples/blobs/ccda/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('Convert CCDA trigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/All Converters - Blob trigger')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Convert Hl7v2 trigger - ADT_A01')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "HL7V2-FHIR_R4 Converter - Blob trigger",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"storageFolder": "[parameters('Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder')]",
+							"storageFile": "[parameters('Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile')]",
+							"rootTemplate": "[parameters('Convert Hl7v2 trigger - ADT_A01_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/convert-samples/blobs/hl7v2/ADT-A01",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('Convert Hl7v2 trigger - ADT_A01_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/HL7V2-FHIR_R4 Converter - Blob trigger')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Convert Hl7v2 trigger - ADT_A02')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "HL7V2-FHIR_R4 Converter - Blob trigger",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"storageFolder": "[parameters('Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFolder')]",
+							"storageFile": "[parameters('Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_storageFile')]",
+							"rootTemplate": "[parameters('Convert Hl7v2 trigger - ADT_A02_properties_HL7V2-FHIR_R4 Converter - Blob trigger_parameters_rootTemplate')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/convert-samples/blobs/hl7v2/ADT-A02",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('Convert Hl7v2 trigger - ADT_A02_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/HL7V2-FHIR_R4 Converter - Blob trigger')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Convert Hl7v2 trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "All Converters - Blob trigger",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"storageFolder": "[parameters('Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFolder')]",
+							"storageFile": "[parameters('Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_storageFile')]",
+							"rootTemplate": "[parameters('Convert Hl7v2 trigger_properties_All Converters - Blob trigger_parameters_rootTemplate')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/convert-samples/blobs/hl7v2",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('Convert Hl7v2 trigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/All Converters - Blob trigger')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Convert JSON trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "All Converters - Blob trigger",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"storageFolder": "[parameters('Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFolder')]",
+							"storageFile": "[parameters('Convert JSON trigger_properties_All Converters - Blob trigger_parameters_storageFile')]",
+							"rootTemplate": "[parameters('Convert JSON trigger_properties_All Converters - Blob trigger_parameters_rootTemplate')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/convert-samples/blobs/json",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('Convert JSON trigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/All Converters - Blob trigger')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Unstructured Text -  Blob trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Unstructured Text Analysis - FHIR_R4 - Blob trigger",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"storageFolder": "[parameters('Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFolder')]",
+							"storageFile": "[parameters('Unstructured Text -  Blob trigger_properties_Unstructured Text Analysis - FHIR_R4 - Blob trigger_parameters_storageFile')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/ta4h-samples/blobs/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('Unstructured Text -  Blob trigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Unstructured Text Analysis - FHIR_R4 - Blob trigger')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "HDSFHIRPatients",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "HDSFHIRPatients_output",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          body as (entry as (fullUrl as string, resource as (gender as string, id as string, meta as (lastUpdated as string, versionId as boolean), resourceType as string), search as (mode as string))[], id as string, link as (relation as string, url as string)[], meta as (lastUpdated as string), resourceType as string, type as string),",
+						"          headers as [string,string]",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     httpMethod: 'GET',",
+						"     timeout: 30,",
+						"     requestInterval: 0,",
+						"     paginationRules: ['supportRFC5988' -> 'true'],",
+						"     responseFormat: ['type' -> 'json', 'documentForm' -> 'documentPerLine']) ~> source1",
+						"source1 select(mapColumn(",
+						"          body,",
+						"          headers",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     insertHttpMethod: 'POST',",
+						"     timeout: 30,",
+						"     requestInterval: 0,",
+						"     requestFormat: ['type' -> 'json'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          body",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/HDSFHIRPatients')]",
+				"[concat(variables('factoryId'), '/datasets/HDSFHIRPatients_output')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1_copy1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "HDSFHIRPatients_example",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "HDSFHIRPatients_output",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     httpMethod: 'GET',",
+						"     timeout: 30,",
+						"     requestInterval: 0,",
+						"     paginationRules: ['supportRFC5988' -> 'true'],",
+						"     responseFormat: ['type' -> 'json', 'documentForm' -> 'documentPerLine']) ~> source1",
+						"source1 select(skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     insertHttpMethod: 'POST',",
+						"     timeout: 30,",
+						"     requestInterval: 0,",
+						"     requestFormat: ['type' -> 'json'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/HDSFHIRPatients_example')]",
+				"[concat(variables('factoryId'), '/datasets/HDSFHIRPatients_output')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/credential1')]",
+			"type": "Microsoft.DataFactory/factories/credentials",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {
+					"resourceId": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.ManagedIdentity/userAssignedIdentities/prdemouami"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
