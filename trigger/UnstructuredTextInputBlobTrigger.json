@@ -3,18 +3,7 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "0-TA4H-FHIR Integration",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"unstructuredInputFolder": "@triggerBody().folderPath",
-					"unstructuredInputFile": "@triggerBody().fileName"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "BlobEventsTrigger",
 		"typeProperties": {
 			"blobPathBeginsWith": "/ta4h-input/blobs/",
