@@ -1,0 +1,47 @@
+{
+	"name": "Copy FHIR - FHIR",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy FHIR resources",
+				"type": "Until",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('Read from HDS FHIR Service').output.pipelineReturnValue.link.relation, 'next')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Read from HDS FHIR Service",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Read from HDS FHIR Service",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					],
+					"timeout": "0.12:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"fhirService": {
+				"type": "string"
+			},
+			"fhirResourceType": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "HFL/3. Copy"
+		},
+		"annotations": []
+	}
+}
