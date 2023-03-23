@@ -1,0 +1,29 @@
+{
+	"name": "Convert Hl7v2 trigger - ADT_A01",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "HL7V2-FHIR_R4 Converter - Blob trigger",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"storageFolder": "@triggerBody().folderPath",
+					"storageFile": "@triggerBody().fileName",
+					"rootTemplate": "ADT_A01"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/convert-samples/blobs/hl7v2/ADT-A01",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

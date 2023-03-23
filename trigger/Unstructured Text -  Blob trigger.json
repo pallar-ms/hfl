@@ -1,0 +1,28 @@
+{
+	"name": "Unstructured Text -  Blob trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Unstructured Text Analysis - FHIR_R4 - Blob trigger",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"storageFolder": "@triggerBody().folderPath",
+					"storageFile": "@triggerBody().fileName"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/ta4h-samples/blobs/",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/cc148bf2-42fb-4913-a3fb-2f284a69eb89/resourceGroups/pallar/providers/Microsoft.Storage/storageAccounts/pallardts",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

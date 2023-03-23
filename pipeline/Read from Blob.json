@@ -1,0 +1,81 @@
+{
+	"name": "Read from Blob",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Storage Files",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.storageAccount,'/',pipeline().parameters.storageFolder,'/',pipeline().parameters.storageFile)",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob",
+						"x-ms-version": "2017-11-09"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
+					}
+				}
+			},
+			{
+				"name": "Set input data",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get Storage Files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "inputData",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('Get Storage Files').output.Response"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			}
+		],
+		"parameters": {
+			"storageAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardts.blob.core.windows.net"
+			},
+			"storageFolder": {
+				"type": "string",
+				"defaultValue": "convert-samples/hl7v2"
+			},
+			"storageFile": {
+				"type": "string",
+				"defaultValue": "ADT-A01-01.hl7"
+			}
+		},
+		"folder": {
+			"name": "HFL/0. Extract"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-22T20:40:53Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,16 @@
+{
+	"name": "Bundle",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HDSFhirService",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Random"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

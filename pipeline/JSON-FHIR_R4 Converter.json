@@ -1,0 +1,116 @@
+{
+	"name": "JSON-FHIR_R4 Converter",
+	"properties": {
+		"activities": [
+			{
+				"name": "JSON-FHIR_R4",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Generic Converter",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"fhirService": {
+							"value": "@pipeline().parameters.fhirService",
+							"type": "Expression"
+						},
+						"acrServer": {
+							"value": "@pipeline().parameters.acrServer",
+							"type": "Expression"
+						},
+						"templateReference": "jsontemplates:default",
+						"inputData": {
+							"value": "@pipeline().parameters.inputData",
+							"type": "Expression"
+						},
+						"inputDataType": "JSON",
+						"rootTemplate": {
+							"value": "@pipeline().parameters.rootTemplate",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Set converted result",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "JSON-FHIR_R4",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "convertResult",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('JSON-FHIR_R4').output.pipelineReturnValue.convertResult"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			},
+			{
+				"name": "Set converted error",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "JSON-FHIR_R4",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "convertError",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('JSON-FHIR_R4').output.pipelineReturnValue.convertError"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			}
+		],
+		"parameters": {
+			"fhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+			},
+			"acrServer": {
+				"type": "string",
+				"defaultValue": "microsofthealth"
+			},
+			"inputData": {
+				"type": "string",
+				"defaultValue": "{\\\"PatientId\\\":12434,\\\"MRN\\\":\\\"M0R1N2\\\",\\\"FirstName\\\":\\\"Jerry\\\",\\\"LastName\\\":\\\"Smith\\\",\\\"Phone Number\\\":[\\\"1234-5678\\\",\\\"1234-5679\\\"],\\\"Gender\\\":\\\"M\\\",\\\"DOB\\\":\\\"20010110\\\"}"
+			},
+			"rootTemplate": {
+				"type": "string",
+				"defaultValue": "ExamplePatient"
+			}
+		},
+		"folder": {
+			"name": "HFL/1. Transform/Convert/Specific Converters"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-23T21:51:26Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

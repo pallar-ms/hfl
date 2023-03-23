@@ -1,0 +1,269 @@
+{
+	"name": "HL7V2-FHIR_R4 Converter - Blob trigger",
+	"properties": {
+		"activities": [
+			{
+				"name": "Read input data",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Read from Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.storageAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.storageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@pipeline().parameters.storageFile",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "HL7V2-FHIR_R4 Converter",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Read input data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "HL7V2-FHIR_R4 Converter",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"fhirService": {
+							"value": "@pipeline().parameters.fhirService",
+							"type": "Expression"
+						},
+						"acrServer": {
+							"value": "@pipeline().parameters.acrServer",
+							"type": "Expression"
+						},
+						"inputData": {
+							"value": "@activity('Read input data').output.pipelineReturnValue.inputData",
+							"type": "Expression"
+						},
+						"rootTemplate": {
+							"value": "@pipeline().parameters.rootTemplate",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Write result to Blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "HL7V2-FHIR_R4 Converter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.storageAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.outputStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.storageFile}_@{utcnow()}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@activity('HL7V2-FHIR_R4 Converter').output.pipelineReturnValue.convertResult",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Write result to Data Lake",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "HL7V2-FHIR_R4 Converter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to Data Lake",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.dataLakeAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.outputStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.storageFile}_@{utcnow()}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@activity('HL7V2-FHIR_R4 Converter').output.pipelineReturnValue.convertResult",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Lookup Data Lake Data",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Write result to Data Lake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "Convert_Results_DataLake",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Write errors to Data Lake",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "HL7V2-FHIR_R4 Converter",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to Data Lake",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.dataLakeAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.errorStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.storageFile}_@{utcnow()}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@activity('HL7V2-FHIR_R4 Converter').output.pipelineReturnValue.convertError",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"fhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+			},
+			"acrServer": {
+				"type": "string",
+				"defaultValue": "pallar.azurecr.io"
+			},
+			"storageAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardts.blob.core.windows.net"
+			},
+			"storageFolder": {
+				"type": "string",
+				"defaultValue": "convert-samples/hl7v2"
+			},
+			"storageFile": {
+				"type": "string",
+				"defaultValue": "ADT-A01-00.hl7"
+			},
+			"outputStorageFolder": {
+				"type": "string",
+				"defaultValue": "convert-results/hl7v2"
+			},
+			"dataLakeAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardatalake.blob.core.windows.net"
+			},
+			"rootTemplate": {
+				"type": "string",
+				"defaultValue": "ADT_A01"
+			},
+			"errorStorageFolder": {
+				"type": "string",
+				"defaultValue": "errors/hl7-v2"
+			}
+		},
+		"folder": {
+			"name": "HFL/ETL Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-23T21:51:27Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

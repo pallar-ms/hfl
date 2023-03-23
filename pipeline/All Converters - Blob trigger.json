@@ -1,0 +1,394 @@
+{
+	"name": "All Converters - Blob trigger",
+	"properties": {
+		"activities": [
+			{
+				"name": "Read input data",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Read from Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.storageAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.storageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@pipeline().parameters.storageFile",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Write result to Blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Converter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.storageAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.outputStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.storageFile}_@{utcnow()}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@variables('convertedResult')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Write result to Data Lake",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Converter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to Data Lake",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.dataLakeAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.outputStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.storageFile}_@{utcnow()}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@variables('convertedResult')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Lookup Data Lake Data",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Write result to Data Lake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "Convert_Results_DataLake",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Converter",
+				"type": "Switch",
+				"dependsOn": [
+					{
+						"activity": "Read input data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().TriggerName",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "Convert Hl7v2 trigger",
+							"activities": [
+								{
+									"name": "HL7V2-FHIR_R4 Converter Activity",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "HL7V2-FHIR_R4 Converter",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"fhirService": {
+												"value": "@pipeline().parameters.fhirService",
+												"type": "Expression"
+											},
+											"acrServer": {
+												"value": "@pipeline().parameters.acrServer",
+												"type": "Expression"
+											},
+											"inputData": {
+												"value": "@activity('Read input data').output.pipelineReturnValue.inputData",
+												"type": "Expression"
+											},
+											"rootTemplate": {
+												"value": "@pipeline().parameters.rootTemplate",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Set Hl7v2-FHIR_R4 converted result",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "HL7V2-FHIR_R4 Converter Activity",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "convertedResult",
+										"value": {
+											"value": "@string(activity('HL7V2-FHIR_R4 Converter Activity').output.pipelineReturnValue.convertResult)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"value": "Convert JSON trigger",
+							"activities": [
+								{
+									"name": "JSON-FHIR_R4 Converter Activity",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "JSON-FHIR_R4 Converter",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"fhirService": {
+												"value": "@pipeline().parameters.fhirService",
+												"type": "Expression"
+											},
+											"acrServer": {
+												"value": "@pipeline().parameters.acrServer",
+												"type": "Expression"
+											},
+											"inputData": {
+												"value": "@activity('Read input data').output.pipelineReturnValue.inputData",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Set JSON-FHIR_R4 converted result",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "JSON-FHIR_R4 Converter Activity",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "convertedResult",
+										"value": {
+											"value": "@string(activity('JSON-FHIR_R4 Converter Activity').output.pipelineReturnValue.convertResult)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"value": "Convert CCDA trigger",
+							"activities": [
+								{
+									"name": "CCDA-FHIR_R4 Converter Activity",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "CCDA-FHIR_R4 Converter",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"fhirService": {
+												"value": "@pipeline().parameters.fhirService",
+												"type": "Expression"
+											},
+											"acrServer": {
+												"value": "@pipeline().parameters.acrServer",
+												"type": "Expression"
+											},
+											"inputData": {
+												"value": "@activity('Read input data').output.pipelineReturnValue.inputData",
+												"type": "Expression"
+											},
+											"rootTemplate": {
+												"value": "@pipeline().parameters.rootTemplate",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Set CCDA-FHIR_R4 converted result",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "CCDA-FHIR_R4 Converter Activity",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "convertedResult",
+										"value": {
+											"value": "@string(activity('CCDA-FHIR_R4 Converter Activity').output.pipelineReturnValue.convertResult)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					],
+					"defaultActivities": [
+						{
+							"name": "Set converted result",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "convertedResult",
+								"value": {
+									"value": "@activity('Read input data').output.pipelineReturnValue.inputData",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"fhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+			},
+			"acrServer": {
+				"type": "string",
+				"defaultValue": "pallar.azurecr.io"
+			},
+			"storageAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardts.blob.core.windows.net"
+			},
+			"storageFolder": {
+				"type": "string",
+				"defaultValue": "convert-samples/hl7v2"
+			},
+			"storageFile": {
+				"type": "string",
+				"defaultValue": "ADT-A01-01.hl7"
+			},
+			"outputStorageFolder": {
+				"type": "string",
+				"defaultValue": "convert-results/hl7v2"
+			},
+			"dataLakeAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardatalake.blob.core.windows.net"
+			},
+			"rootTemplate": {
+				"type": "string",
+				"defaultValue": "ADT_A01"
+			}
+		},
+		"variables": {
+			"convertedResult": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "HFL/ETL Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-23T20:07:32Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

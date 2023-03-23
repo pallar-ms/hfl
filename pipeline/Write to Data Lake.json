@@ -1,0 +1,61 @@
+{
+	"name": "Write to Data Lake",
+	"properties": {
+		"activities": [
+			{
+				"name": "Save output to Data Lake",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.storageAccount,'/',pipeline().parameters.storageFolder,'/',pipeline().parameters.storageFile)",
+						"type": "Expression"
+					},
+					"method": "PUT",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob",
+						"x-ms-version": "2017-11-09"
+					},
+					"body": {
+						"value": "@pipeline().parameters.fileContent",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"storageAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardatalake.blob.core.windows.net"
+			},
+			"storageFolder": {
+				"type": "string",
+				"defaultValue": "convert-results/hl7v2"
+			},
+			"storageFile": {
+				"type": "string"
+			},
+			"fileContent": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "HFL/2. Load"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-22T20:40:53Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

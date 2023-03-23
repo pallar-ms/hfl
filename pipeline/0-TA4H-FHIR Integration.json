@@ -1,0 +1,256 @@
+{
+	"name": "0-TA4H-FHIR Integration",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Input",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.extStorageAccount,'/',pipeline().parameters.unstructuredInputFolder,'/',pipeline().parameters.unstructuredInputFile)",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob",
+						"x-ms-version": "2017-11-09"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
+					}
+				}
+			},
+			{
+				"name": "TA4H Execution",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [
+					{
+						"activity": "Get Input",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "TA4HJobOperatorHttpTrigger",
+					"method": "POST",
+					"body": {
+						"name": "@{pipeline().parameters.unstructuredInputFile}",
+						"inputText": "@{activity('Get Input').output.Response}"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "TA4H FHIR Int AzFunc",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Write TA4H Output to Ext Storage",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Set ext storage result path",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Save TA4H Outputs",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"extStorageResultPath": {
+							"value": "@variables('extStorageResultPath')",
+							"type": "Expression"
+						},
+						"ta4hResultOutputFile": {
+							"value": "@{pipeline().parameters.ta4hResultOutputFile}.json",
+							"type": "Expression"
+						},
+						"ta4hResultFHIRBundleFile": {
+							"value": "@{pipeline().parameters.ta4hResultFHIRBundleFile}.json",
+							"type": "Expression"
+						},
+						"ta4hResultOutput": {
+							"value": "@activity('TA4H Execution').output.ta4HJobResult",
+							"type": "Expression"
+						},
+						"ta4hResultFHIRBundle": {
+							"value": "@activity('TA4H Execution').output.ta4HJobResultFHIRBundle",
+							"type": "Expression"
+						},
+						"extStorageAccount": {
+							"value": "@pipeline().parameters.extStorageAccount",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "FHIR Ingestion",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [
+					{
+						"activity": "Set ext storage result path",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "FHIRIngestionHttpTrigger",
+					"method": "POST",
+					"body": {
+						"value": "@json(concat('{\"name\":\"',variables('extStorageResultPath'), '\", \"inputText\": ',activity('TA4H Execution').output.ta4HJobResultFHIRBundle, '}'))",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "TA4H FHIR Int AzFunc",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set ext storage result path",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "TA4H Execution",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "extStorageResultPath",
+					"value": {
+						"value": "@concat(pipeline().parameters.extStorageResultFolder, '/',pipeline().parameters.unstructuredInputFile,'/', utcnow())",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Write FHIR Request-Reponse to Ext Storage",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "FHIR Ingestion",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Save FHIR Request Response",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"extStorageResultPath": {
+							"value": "@variables('extStorageResultPath')",
+							"type": "Expression"
+						},
+						"fhirBundleRequestFile": {
+							"value": "@{pipeline().parameters.fhirBundleRequestFile}.json",
+							"type": "Expression"
+						},
+						"fhirBundleResponseFile": {
+							"value": "@{pipeline().parameters.fhirBundleResponseFile}.json",
+							"type": "Expression"
+						},
+						"fhirBundleRequest": {
+							"value": "@activity('FHIR Ingestion').output.fhirBundleResource",
+							"type": "Expression"
+						},
+						"fhirBundleResponse": {
+							"value": "@activity('FHIR Ingestion').output.fhirBundleResponse",
+							"type": "Expression"
+						},
+						"extStorageAccount": {
+							"value": "@pipeline().parameters.extStorageAccount",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"extStorageAccount": {
+				"type": "string",
+				"defaultValue": "https://pallarta4hfhirint.blob.core.windows.net"
+			},
+			"unstructuredInputFolder": {
+				"type": "string",
+				"defaultValue": "ta4h-input"
+			},
+			"unstructuredInputFile": {
+				"type": "string",
+				"defaultValue": "simple_medication.txt"
+			},
+			"extStorageResultFolder": {
+				"type": "string",
+				"defaultValue": "ta4h-output"
+			},
+			"ta4hResultOutputFile": {
+				"type": "string",
+				"defaultValue": "ta4hResultOutput"
+			},
+			"ta4hResultFHIRBundleFile": {
+				"type": "string",
+				"defaultValue": "ta4hResultFHIRBundle"
+			},
+			"fhirBundleRequestFile": {
+				"type": "string",
+				"defaultValue": "fhirBundleRequest"
+			},
+			"fhirBundleResponseFile": {
+				"type": "string",
+				"defaultValue": "fhirBundleResponseFile"
+			}
+		},
+		"variables": {
+			"extStorageResultPath": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "TA4H-FHIR-AzFunc"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-01-14T00:08:32Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

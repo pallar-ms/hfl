@@ -1,0 +1,19 @@
+{
+	"name": "HDSFHIRPatients",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HDSFhirService",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Random"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "Patient"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

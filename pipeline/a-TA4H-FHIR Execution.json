@@ -1,0 +1,210 @@
+{
+	"name": "a-TA4H-FHIR Execution",
+	"properties": {
+		"activities": [
+			{
+				"name": "AnalyzeText",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Get Input",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://pr-ta4h-demo-eastus.cognitiveservices.azure.com/language/analyze-text/jobs?api-version=2022-05-15-preview",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json",
+						"Ocp-Apim-Subscription-Key": "9d29014a68424284be9568150b75092a"
+					},
+					"body": {
+						"value": "@activity('Get Input').output.input",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Get Job",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "AnalyzeText",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@activity('AnalyzeText').output.ADFWebActivityResponseHeaders['operation-location']",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"headers": {
+						"Content-Type": "application/json",
+						"Ocp-Apim-Subscription-Key": "9d29014a68424284be9568150b75092a"
+					}
+				}
+			},
+			{
+				"name": "Save TA4H Raw Output to Blob",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Get Job",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://pallar9238.blob.core.windows.net/ta4h-output-adf/ta4hrawoutput.json",
+					"method": "PUT",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob",
+						"x-ms-version": "2017-11-09"
+					},
+					"body": {
+						"value": "@activity('Get Job').output",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
+					}
+				}
+			},
+			{
+				"name": "FHIR ingest",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Save TA4H FHIR Output to Blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com/",
+					"method": "POST",
+					"body": {
+						"value": "@activity('Get Job').output.tasks.items[0].results.documents[0].fhirBundle",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com"
+					}
+				}
+			},
+			{
+				"name": "Save TA4H FHIR Output to Blob",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Save TA4H Raw Output to Blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://pallar9238.blob.core.windows.net/ta4h-output-adf/ta4hfhiroutput.json",
+					"method": "PUT",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob",
+						"x-ms-version": "2017-11-09"
+					},
+					"body": {
+						"value": "@activity('Get Job').output.tasks.items[0].results.documents[0].fhirBundle",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
+					}
+				}
+			},
+			{
+				"name": "Get Input",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://pallar9238.blob.core.windows.net/ta4h-input-adf/ta4hinput.json",
+					"method": "GET",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob",
+						"x-ms-version": "2017-11-09"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
+					}
+				}
+			}
+		],
+		"variables": {
+			"FHIROutput": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "HDS-ADF Integration Demo"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-01-12T18:26:39Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

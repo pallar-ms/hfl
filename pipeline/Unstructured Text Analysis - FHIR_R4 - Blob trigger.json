@@ -1,0 +1,256 @@
+{
+	"name": "Unstructured Text Analysis - FHIR_R4 - Blob trigger",
+	"properties": {
+		"activities": [
+			{
+				"name": "Read input data",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Read from Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.storageAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.storageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@pipeline().parameters.storageFile",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Text Analysis for Healthcare",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Read input data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Analyze Unstructured Data",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"cognitiveServiceUrl": {
+							"value": "@pipeline().parameters.cognitiveServiceUrl",
+							"type": "Expression"
+						},
+						"inputData": {
+							"value": "@array(split(activity('Read input data').output.pipelineReturnValue.inputData, '---'))",
+							"type": "Expression"
+						},
+						"ocpApimSubscriptionKey": {
+							"value": "@pipeline().parameters.ocpApimSubscriptionKey",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Write raw TA4H result to Blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Text Analysis for Healthcare",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.storageAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.outputStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.storageFile}_rawTA4HOutput_@{utcnow()}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@activity('Text Analysis for Healthcare').output.pipelineReturnValue.rawTA4HOutput",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Write raw TA4H result to Data Lake",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Text Analysis for Healthcare",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to Data Lake",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.dataLakeAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.outputStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.storageFile}_rawTA4HOutput_@{utcnow()}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@activity('Text Analysis for Healthcare').output.pipelineReturnValue.rawTA4HOutput",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Write FHIR bundles result to Blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Write raw TA4H result to Blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.storageAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.outputStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.storageFile}_fhirBundlesOutput_@{utcnow()}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@activity('Text Analysis for Healthcare').output.pipelineReturnValue.fhirBundlesOutput",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Write FHIR bundles result to Data Lake",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Write raw TA4H result to Data Lake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to Data Lake",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.dataLakeAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.outputStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.storageFile}_fhirBundlesOutput_@{utcnow()}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@activity('Text Analysis for Healthcare').output.pipelineReturnValue.fhirBundlesOutput",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"storageAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardts.blob.core.windows.net"
+			},
+			"storageFolder": {
+				"type": "string",
+				"defaultValue": "ta4h-samples"
+			},
+			"storageFile": {
+				"type": "string",
+				"defaultValue": "DEMO PROGRESS NOTE.txt"
+			},
+			"outputStorageFolder": {
+				"type": "string",
+				"defaultValue": "ta4h-results"
+			},
+			"dataLakeAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardatalake.blob.core.windows.net"
+			},
+			"cognitiveServiceUrl": {
+				"type": "string",
+				"defaultValue": "https://pr-ta4h-demo-eastus.cognitiveservices.azure.com/language/analyze-text/jobs?api-version=2022-05-15-preview"
+			},
+			"ocpApimSubscriptionKey": {
+				"type": "string",
+				"defaultValue": "9d29014a68424284be9568150b75092a"
+			}
+		},
+		"folder": {
+			"name": "HFL/ETL Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-23T19:27:26Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

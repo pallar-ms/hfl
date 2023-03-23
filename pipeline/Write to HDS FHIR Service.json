@@ -1,0 +1,53 @@
+{
+	"name": "Write to HDS FHIR Service",
+	"properties": {
+		"activities": [
+			{
+				"name": "Save output to FHIR Service",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@pipeline().parameters.fhirService",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"body": {
+						"value": "@pipeline().parameters.fhirResource",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": {
+							"value": "@pipeline().parameters.fhirService",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"fhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+			},
+			"fhirResource": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "HFL/2. Load"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-23T16:50:24Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

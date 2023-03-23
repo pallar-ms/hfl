@@ -1,0 +1,14 @@
+{
+	"name": "HDSFhirService",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "ManagedServiceIdentity",
+			"aadResourceId": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com"
+		}
+	}
+}

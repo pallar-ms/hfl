@@ -1,0 +1,102 @@
+{
+	"name": "Save TA4H Outputs",
+	"properties": {
+		"activities": [
+			{
+				"name": "Save TA4H Raw Output to Blob",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.extStorageAccount,'/',pipeline().parameters.extStorageResultPath,'/',pipeline().parameters.ta4hResultOutputFile)",
+						"type": "Expression"
+					},
+					"method": "PUT",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob",
+						"x-ms-version": "2017-11-09"
+					},
+					"body": {
+						"value": "@pipeline().parameters.ta4hResultOutput",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
+					}
+				}
+			},
+			{
+				"name": "Save TA4H Output FHIR Bundle to Blob",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.extStorageAccount,'/',pipeline().parameters.extStorageResultPath,'/',pipeline().parameters.ta4hResultFHIRBundleFile)",
+						"type": "Expression"
+					},
+					"method": "PUT",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob",
+						"x-ms-version": "2017-11-09"
+					},
+					"body": {
+						"value": "@pipeline().parameters.ta4hResultFHIRBundle",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"extStorageResultPath": {
+				"type": "string"
+			},
+			"ta4hResultOutputFile": {
+				"type": "string"
+			},
+			"ta4hResultFHIRBundleFile": {
+				"type": "string"
+			},
+			"ta4hResultOutput": {
+				"type": "string"
+			},
+			"ta4hResultFHIRBundle": {
+				"type": "string"
+			},
+			"extStorageAccount": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"fhidBundleOutputBlobFile": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "TA4H-FHIR-AzFunc"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-01-14T00:08:31Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

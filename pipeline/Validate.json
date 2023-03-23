@@ -1,0 +1,86 @@
+{
+	"name": "Validate",
+	"properties": {
+		"activities": [
+			{
+				"name": "Validate",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.fhirService, pipeline().parameters.fhirResource.resourceType, '/$validate')",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"body": {
+						"value": "@pipeline().parameters.fhirResource",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": {
+							"value": "@pipeline().parameters.fhirService",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Set validation result",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Validate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "validationCode",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('Validate').output.issue[0].code"
+							}
+						},
+						{
+							"key": "validationDiagnostics",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('Validate').output.issue[0].diagnostics"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			}
+		],
+		"parameters": {
+			"fhirService": {
+				"type": "String",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+			},
+			"fhirResource": {
+				"type": "object"
+			}
+		},
+		"folder": {
+			"name": "HFL/1. Transform/Validate"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-23T21:17:49Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

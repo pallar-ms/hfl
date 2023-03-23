@@ -1,0 +1,256 @@
+{
+	"name": "Convert_Results_Blob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "pallarConvert",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Convert"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "convert-results"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"resourceType": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
+				},
+				"timestamp": {
+					"type": "string"
+				},
+				"identifier": {
+					"type": "object",
+					"properties": {
+						"value": {
+							"type": "string"
+						}
+					}
+				},
+				"id": {
+					"type": "string"
+				},
+				"entry": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"fullUrl": {
+								"type": "string"
+							},
+							"resource": {
+								"type": "object",
+								"properties": {
+									"resourceType": {
+										"type": "string"
+									},
+									"id": {
+										"type": "string"
+									},
+									"source": {
+										"type": "object",
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"_endpoint": {
+												"type": "object",
+												"properties": {
+													"extension": {
+														"type": "array",
+														"items": {
+															"type": "object",
+															"properties": {
+																"url": {
+																	"type": "string"
+																},
+																"valueCode": {
+																	"type": "string"
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									"destination": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"name": {
+													"type": "string"
+												},
+												"_endpoint": {
+													"type": "object",
+													"properties": {
+														"extension": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"url": {
+																		"type": "string"
+																	},
+																	"valueCode": {
+																		"type": "string"
+																	}
+																}
+															}
+														}
+													}
+												},
+												"receiver": {
+													"type": "object",
+													"properties": {
+														"reference": {
+															"type": "string"
+														}
+													}
+												}
+											}
+										}
+									},
+									"meta": {
+										"type": "object",
+										"properties": {
+											"tag": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"code": {
+															"type": "string"
+														},
+														"system": {
+															"type": "string"
+														}
+													}
+												}
+											}
+										}
+									},
+									"eventCoding": {
+										"type": "object",
+										"properties": {
+											"code": {
+												"type": "string"
+											},
+											"system": {
+												"type": "string"
+											},
+											"display": {
+												"type": "string"
+											}
+										}
+									},
+									"sender": {
+										"type": "object",
+										"properties": {
+											"reference": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							},
+							"request": {
+								"type": "object",
+								"properties": {
+									"method": {
+										"type": "string"
+									},
+									"url": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"ADFWebActivityResponseHeaders": {
+					"type": "object",
+					"properties": {
+						"X-Request-ID": {
+							"type": "string"
+						},
+						"X-Content-Type-Options": {
+							"type": "string"
+						},
+						"X-Frame-Options": {
+							"type": "string"
+						},
+						"Content-Security-Policy": {
+							"type": "string"
+						},
+						"Strict-Transport-Security": {
+							"type": "string"
+						},
+						"Date": {
+							"type": "string"
+						},
+						"Server": {
+							"type": "string"
+						},
+						"Content-Length": {
+							"type": "string"
+						},
+						"Content-Type": {
+							"type": "string"
+						}
+					}
+				},
+				"effectiveIntegrationRuntime": {
+					"type": "string"
+				},
+				"executionDuration": {
+					"type": "integer"
+				},
+				"durationInQueue": {
+					"type": "object",
+					"properties": {
+						"integrationRuntimeQueue": {
+							"type": "integer"
+						}
+					}
+				},
+				"billingReference": {
+					"type": "object",
+					"properties": {
+						"activityType": {
+							"type": "string"
+						},
+						"billableDuration": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"meterType": {
+										"type": "string"
+									},
+									"duration": {
+										"type": "number"
+									},
+									"unit": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
