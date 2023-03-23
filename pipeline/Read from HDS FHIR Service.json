@@ -1,0 +1,83 @@
+{
+	"name": "Read from HDS FHIR Service",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get FHIR Resources",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.fhirService, pipeline().parameters.fhirResourceType)",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": {
+							"value": "@pipeline().parameters.fhirService",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Set resources output",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get FHIR Resources",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "resources",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('Get FHIR Resources').output.entry"
+							}
+						},
+						{
+							"key": "link",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('Get FHIR Resources').output.link[0]"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			}
+		],
+		"parameters": {
+			"fhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+			},
+			"fhirResourceType": {
+				"type": "string",
+				"defaultValue": "Patient"
+			}
+		},
+		"folder": {
+			"name": "HFL/0. Extract"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-22T20:40:53Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

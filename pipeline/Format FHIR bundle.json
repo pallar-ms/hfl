@@ -1,0 +1,109 @@
+{
+	"name": "Format FHIR bundle",
+	"properties": {
+		"activities": [
+			{
+				"name": "Read from HDS FHIR Service",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Read from HDS FHIR Service",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"fhirService": {
+							"value": "@pipeline().parameters.fhirService",
+							"type": "Expression"
+						},
+						"fhirResourceType": {
+							"value": "@pipeline().parameters.fhirResourceType",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Format FHIR resource",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Read from HDS FHIR Service",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Read from HDS FHIR Service').output.pipelineReturnValue.resources",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Append variable1",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "resources",
+								"value": {
+									"value": "{\n    \"fullUrl\":\"@{item().resource.resourceType}/@{item().resource.id}\",\n    \"resource\": @{item().resource},\n    \"request\": {\n        \"method\": \"POST\",\n        \"url\": \"@{item().resource.resourceType}\"\n    }\n}",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Generate bundle",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Format FHIR resource",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "fhirBundle",
+							"value": {
+								"type": "Object",
+								"content": "{\n    \"resourceType\": \"Bundle\",\n\t\"id\": \"id\",\n\t\"meta\": {\n\t\t\"profile\": [\n\t\t\t\"http://hl7.org/fhir/4.0.1/StructureDefinition/Bundle\"\n\t\t]\n\t},\n\t\"type\": \"batch\",\n\t\"entry\": [\n        @{variables('resources')}\n    ]\n}"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			}
+		],
+		"parameters": {
+			"fhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+			},
+			"fhirResourceType": {
+				"type": "string",
+				"defaultValue": "Patient"
+			}
+		},
+		"variables": {
+			"resources": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "HFL/1. Transform/Format FHIR resources"
+		},
+		"annotations": []
+	}
+}
