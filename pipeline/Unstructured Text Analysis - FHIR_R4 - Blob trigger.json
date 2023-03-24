@@ -15,15 +15,15 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"storageAccount": {
-							"value": "@pipeline().parameters.storageAccount",
+							"value": "@pipeline().parameters.inputStorageAccount",
 							"type": "Expression"
 						},
 						"storageFolder": {
-							"value": "@pipeline().parameters.storageFolder",
+							"value": "@pipeline().parameters.inputStorageFolder",
 							"type": "Expression"
 						},
 						"storageFile": {
-							"value": "@pipeline().parameters.storageFile",
+							"value": "@pipeline().parameters.inputStorageFile",
 							"type": "Expression"
 						}
 					}
@@ -83,7 +83,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"storageAccount": {
-							"value": "@pipeline().parameters.storageAccount",
+							"value": "@pipeline().parameters.outputStorageAccount",
 							"type": "Expression"
 						},
 						"storageFolder": {
@@ -91,7 +91,7 @@
 							"type": "Expression"
 						},
 						"storageFile": {
-							"value": "@{pipeline().parameters.storageFile}_rawTA4HOutput_@{utcnow()}.json",
+							"value": "@{pipeline().parameters.inputStorageFile}_rawTA4HOutput_@{utcnow()}.json",
 							"type": "Expression"
 						},
 						"fileContent": {
@@ -121,7 +121,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"storageAccount": {
-							"value": "@pipeline().parameters.dataLakeAccount",
+							"value": "@pipeline().parameters.outputDataLakeAccount",
 							"type": "Expression"
 						},
 						"storageFolder": {
@@ -129,7 +129,7 @@
 							"type": "Expression"
 						},
 						"storageFile": {
-							"value": "@{pipeline().parameters.storageFile}_rawTA4HOutput_@{utcnow()}.json",
+							"value": "@{pipeline().parameters.inputStorageFile}_rawTA4HOutput_@{utcnow()}.json",
 							"type": "Expression"
 						},
 						"fileContent": {
@@ -159,7 +159,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"storageAccount": {
-							"value": "@pipeline().parameters.storageAccount",
+							"value": "@pipeline().parameters.outputStorageAccount",
 							"type": "Expression"
 						},
 						"storageFolder": {
@@ -167,7 +167,7 @@
 							"type": "Expression"
 						},
 						"storageFile": {
-							"value": "@{pipeline().parameters.storageFile}_fhirBundlesOutput_@{utcnow()}.json",
+							"value": "@{pipeline().parameters.inputStorageFile}_fhirBundlesOutput_@{utcnow()}.json",
 							"type": "Expression"
 						},
 						"fileContent": {
@@ -197,7 +197,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"storageAccount": {
-							"value": "@pipeline().parameters.dataLakeAccount",
+							"value": "@pipeline().parameters.outputDataLakeAccount",
 							"type": "Expression"
 						},
 						"storageFolder": {
@@ -205,7 +205,7 @@
 							"type": "Expression"
 						},
 						"storageFile": {
-							"value": "@{pipeline().parameters.storageFile}_fhirBundlesOutput_@{utcnow()}.json",
+							"value": "@{pipeline().parameters.inputStorageFile}_fhirBundlesOutput_@{utcnow()}.json",
 							"type": "Expression"
 						},
 						"fileContent": {
@@ -217,15 +217,15 @@
 			}
 		],
 		"parameters": {
-			"storageAccount": {
+			"inputStorageAccount": {
 				"type": "string",
 				"defaultValue": "https://pallardts.blob.core.windows.net"
 			},
-			"storageFolder": {
+			"inputStorageFolder": {
 				"type": "string",
 				"defaultValue": "ta4h-samples"
 			},
-			"storageFile": {
+			"inputStorageFile": {
 				"type": "string",
 				"defaultValue": "DEMO PROGRESS NOTE.txt"
 			},
@@ -233,7 +233,7 @@
 				"type": "string",
 				"defaultValue": "ta4h-results"
 			},
-			"dataLakeAccount": {
+			"outputDataLakeAccount": {
 				"type": "string",
 				"defaultValue": "https://pallardatalake.blob.core.windows.net"
 			},
@@ -244,6 +244,10 @@
 			"ocpApimSubscriptionKey": {
 				"type": "string",
 				"defaultValue": "9d29014a68424284be9568150b75092a"
+			},
+			"outputStorageAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardts.blob.core.windows.net"
 			}
 		},
 		"folder": {

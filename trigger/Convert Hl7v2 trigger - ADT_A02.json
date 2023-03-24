@@ -10,8 +10,8 @@
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"storageFolder": "@triggerBody().folderPath",
-					"storageFile": "@triggerBody().fileName",
+					"inputStorageFolder": "@triggerBody().folderPath",
+					"inputStorageFile": "@triggerBody().fileName",
 					"rootTemplate": "ADT_A02"
 				}
 			}
