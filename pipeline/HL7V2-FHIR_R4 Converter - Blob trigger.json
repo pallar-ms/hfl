@@ -15,15 +15,15 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"storageAccount": {
-							"value": "@pipeline().parameters.storageAccount",
+							"value": "@pipeline().parameters.inputStorageAccount",
 							"type": "Expression"
 						},
 						"storageFolder": {
-							"value": "@pipeline().parameters.storageFolder",
+							"value": "@pipeline().parameters.inputStorageFolder",
 							"type": "Expression"
 						},
 						"storageFile": {
-							"value": "@pipeline().parameters.storageFile",
+							"value": "@pipeline().parameters.inputStorageFile",
 							"type": "Expression"
 						}
 					}
@@ -230,15 +230,15 @@
 				"type": "string",
 				"defaultValue": "pallar.azurecr.io"
 			},
-			"storageAccount": {
+			"inputStorageAccount": {
 				"type": "string",
 				"defaultValue": "https://pallardts.blob.core.windows.net"
 			},
-			"storageFolder": {
+			"inputStorageFolder": {
 				"type": "string",
 				"defaultValue": "convert-samples/hl7v2"
 			},
-			"storageFile": {
+			"inputStorageFile": {
 				"type": "string",
 				"defaultValue": "ADT-A01-00.hl7"
 			},
@@ -246,7 +246,7 @@
 				"type": "string",
 				"defaultValue": "convert-results/hl7v2"
 			},
-			"dataLakeAccount": {
+			"outputDataLakeAccount": {
 				"type": "string",
 				"defaultValue": "https://pallardatalake.blob.core.windows.net"
 			},
@@ -257,6 +257,10 @@
 			"errorStorageFolder": {
 				"type": "string",
 				"defaultValue": "errors/hl7-v2"
+			},
+			"outputStorageAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardts.blob.core.windows.net"
 			}
 		},
 		"folder": {
