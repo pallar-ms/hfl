@@ -90,20 +90,16 @@
 		],
 		"parameters": {
 			"fhirService": {
-				"type": "string",
-				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+				"type": "string"
 			},
 			"acrServer": {
-				"type": "string",
-				"defaultValue": "microsofthealth"
+				"type": "string"
 			},
 			"inputData": {
-				"type": "string",
-				"defaultValue": "{\\\"PatientId\\\":12434,\\\"MRN\\\":\\\"M0R1N2\\\",\\\"FirstName\\\":\\\"Jerry\\\",\\\"LastName\\\":\\\"Smith\\\",\\\"Phone Number\\\":[\\\"1234-5678\\\",\\\"1234-5679\\\"],\\\"Gender\\\":\\\"M\\\",\\\"DOB\\\":\\\"20010110\\\"}"
+				"type": "string"
 			},
 			"rootTemplate": {
-				"type": "string",
-				"defaultValue": "ExamplePatient"
+				"type": "string"
 			}
 		},
 		"folder": {

@@ -36,8 +36,7 @@
 		],
 		"parameters": {
 			"fhirService": {
-				"type": "string",
-				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+				"type": "string"
 			},
 			"fhirResource": {
 				"type": "string"

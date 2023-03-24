@@ -51,12 +51,10 @@
 		],
 		"parameters": {
 			"storageAccount": {
-				"type": "string",
-				"defaultValue": "https://pallardatalake.blob.core.windows.net"
+				"type": "string"
 			},
 			"storageFolder": {
-				"type": "string",
-				"defaultValue": "fhir"
+				"type": "string"
 			},
 			"inputData": {
 				"type": "array"

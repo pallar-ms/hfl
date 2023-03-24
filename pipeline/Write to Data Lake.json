@@ -37,12 +37,10 @@
 		],
 		"parameters": {
 			"storageAccount": {
-				"type": "string",
-				"defaultValue": "https://pallardatalake.blob.core.windows.net"
+				"type": "string"
 			},
 			"storageFolder": {
-				"type": "string",
-				"defaultValue": "convert-results/hl7v2"
+				"type": "string"
 			},
 			"storageFile": {
 				"type": "string"

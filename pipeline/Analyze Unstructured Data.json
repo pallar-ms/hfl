@@ -191,18 +191,13 @@
 		],
 		"parameters": {
 			"cognitiveServiceUrl": {
-				"type": "string",
-				"defaultValue": "https://pr-ta4h-demo-eastus.cognitiveservices.azure.com/language/analyze-text/jobs?api-version=2022-05-15-preview"
+				"type": "string"
 			},
 			"inputData": {
-				"type": "array",
-				"defaultValue": [
-					"The doctor prescribed 200mg Ibuprofen."
-				]
+				"type": "array"
 			},
 			"ocpApimSubscriptionKey": {
-				"type": "string",
-				"defaultValue": "9d29014a68424284be9568150b75092a"
+				"type": "string"
 			}
 		},
 		"variables": {

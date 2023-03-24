@@ -59,16 +59,13 @@
 		],
 		"parameters": {
 			"storageAccount": {
-				"type": "string",
-				"defaultValue": "https://pallardts.blob.core.windows.net"
+				"type": "string"
 			},
 			"storageFolder": {
-				"type": "string",
-				"defaultValue": "convert-samples/hl7v2"
+				"type": "string"
 			},
 			"storageFile": {
-				"type": "string",
-				"defaultValue": "ADT-A01-01.hl7"
+				"type": "string"
 			}
 		},
 		"folder": {
