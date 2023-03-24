@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "@concat(pipeline().parameters.fhirService, pipeline().parameters.fhirResourceType)",
+						"value": "@if(equals(pipeline().parameters.inputUrl, ''),\n concat(pipeline().parameters.fhirService, pipeline().parameters.fhirResourceType),\n pipeline().parameters.inputUrl)",
 						"type": "Expression"
 					},
 					"method": "GET",
@@ -71,6 +71,14 @@
 			"fhirResourceType": {
 				"type": "string",
 				"defaultValue": "Patient"
+			},
+			"inputUrl": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"url": {
+				"type": "String"
 			}
 		},
 		"folder": {

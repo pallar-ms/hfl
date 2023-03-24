@@ -3,53 +3,43 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Read from HDS FHIR Service",
-				"type": "ExecutePipeline",
+				"name": "Format FHIR resource",
+				"type": "ForEach",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Read from HDS FHIR Service",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"fhirService": {
-							"value": "@pipeline().parameters.fhirService",
-							"type": "Expression"
-						},
-						"fhirResourceType": {
-							"value": "@pipeline().parameters.fhirResourceType",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			{
-				"name": "Format FHIR resource",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Read from HDS FHIR Service",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
 					"items": {
-						"value": "@activity('Read from HDS FHIR Service').output.pipelineReturnValue.resources",
+						"value": "@pipeline().parameters.inputResources",
 						"type": "Expression"
 					},
 					"activities": [
 						{
-							"name": "Append variable1",
+							"name": "Append FHIR resources",
 							"type": "AppendVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Update FHIR resource",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "resources",
+								"value": {
+									"value": "@json(variables('updatedFhirResource'))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Update FHIR resource",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "updatedFhirResource",
 								"value": {
 									"value": "{\n    \"fullUrl\":\"@{item().resource.resourceType}/@{item().resource.id}\",\n    \"resource\": @{item().resource},\n    \"request\": {\n        \"method\": \"POST\",\n        \"url\": \"@{item().resource.resourceType}\"\n    }\n}",
 									"type": "Expression"
@@ -60,7 +50,7 @@
 				}
 			},
 			{
-				"name": "Generate bundle",
+				"name": "Set FHIR bundle",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -77,8 +67,8 @@
 						{
 							"key": "fhirBundle",
 							"value": {
-								"type": "Object",
-								"content": "{\n    \"resourceType\": \"Bundle\",\n\t\"id\": \"id\",\n\t\"meta\": {\n\t\t\"profile\": [\n\t\t\t\"http://hl7.org/fhir/4.0.1/StructureDefinition/Bundle\"\n\t\t]\n\t},\n\t\"type\": \"batch\",\n\t\"entry\": [\n        @{variables('resources')}\n    ]\n}"
+								"type": "Expression",
+								"content": "@concat('{\n    \"resourceType\": \"Bundle\",    \n    \"id\": \"id\",\n    \"meta\": {\n        \"profile\": [\n             \"http://hl7.org/fhir/4.0.1/StructureDefinition/Bundle\"\n        ]\n    },\n    \"type\": \"batch\",    \n    \"entry\":', string(variables('resources')), '\n}')"
 							}
 						}
 					],
@@ -87,22 +77,20 @@
 			}
 		],
 		"parameters": {
-			"fhirService": {
-				"type": "string",
-				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
-			},
-			"fhirResourceType": {
-				"type": "string",
-				"defaultValue": "Patient"
+			"inputResources": {
+				"type": "array"
 			}
 		},
 		"variables": {
 			"resources": {
 				"type": "Array"
+			},
+			"updatedFhirResource": {
+				"type": "String"
 			}
 		},
 		"folder": {
-			"name": "HFL/1. Transform/Format FHIR resources"
+			"name": "HFL/1. Transform/Format"
 		},
 		"annotations": []
 	}

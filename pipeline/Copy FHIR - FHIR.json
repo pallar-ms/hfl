@@ -9,10 +9,86 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('Read from HDS FHIR Service').output.pipelineReturnValue.link.relation, 'next')",
+						"value": "@equals(activity('Read from HDS FHIR Service').output.pipelineReturnValue.link.relation, 'self')",
 						"type": "Expression"
 					},
 					"activities": [
+						{
+							"name": "Format FHIR bundle",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Read from HDS FHIR Service",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Format FHIR bundle",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"inputResources": {
+										"value": "@activity('Read from HDS FHIR Service').output.pipelineReturnValue.resources",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Save to FHIR service",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Format FHIR bundle",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Write to HDS FHIR Service",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"fhirService": {
+										"value": "@pipeline().parameters.targetFhirService",
+										"type": "Expression"
+									},
+									"fhirResource": {
+										"value": "@json(activity('Format FHIR bundle').output.pipelineReturnValue.fhirBundle)",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Set next link",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Format FHIR bundle",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "nextLink",
+								"value": {
+									"value": "@activity('Read from HDS FHIR Service').output.pipelineReturnValue.link.url",
+									"type": "Expression"
+								}
+							}
+						},
 						{
 							"name": "Read from HDS FHIR Service",
 							"type": "ExecutePipeline",
@@ -23,7 +99,21 @@
 									"referenceName": "Read from HDS FHIR Service",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true
+								"waitOnCompletion": true,
+								"parameters": {
+									"fhirService": {
+										"value": "@pipeline().parameters.sourceFhirService",
+										"type": "Expression"
+									},
+									"fhirResourceType": {
+										"value": "@pipeline().parameters.fhirResourceType",
+										"type": "Expression"
+									},
+									"inputUrl": {
+										"value": "@variables('nextLink')",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					],
@@ -32,11 +122,25 @@
 			}
 		],
 		"parameters": {
-			"fhirService": {
-				"type": "string"
+			"sourceFhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
 			},
 			"fhirResourceType": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Patient"
+			},
+			"targetFhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com"
+			}
+		},
+		"variables": {
+			"updatedFhirResource": {
+				"type": "String"
+			},
+			"nextLink": {
+				"type": "String"
 			}
 		},
 		"folder": {
