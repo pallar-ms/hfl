@@ -30,7 +30,7 @@
 				}
 			},
 			{
-				"name": "Set resources output",
+				"name": "Set FHIR resources output",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -40,6 +40,12 @@
 						]
 					}
 				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "pipelineReturnValue",
