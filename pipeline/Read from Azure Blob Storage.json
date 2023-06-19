@@ -1,9 +1,9 @@
 {
-	"name": "Read from Blob",
+	"name": "Read from Azure Blob Storage",
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Storage Files",
+				"name": "Get Blob",
 				"type": "WebActivity",
 				"dependsOn": [],
 				"policy": {
@@ -31,25 +31,31 @@
 				}
 			},
 			{
-				"name": "Set input data",
+				"name": "Set blob content",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "Get Storage Files",
+						"activity": "Get Blob",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "pipelineReturnValue",
 					"value": [
 						{
-							"key": "inputData",
+							"key": "blobData",
 							"value": {
 								"type": "Expression",
-								"content": "@activity('Get Storage Files').output.Response"
+								"content": "@activity('Get Blob').output.Response"
 							}
 						}
 					],
