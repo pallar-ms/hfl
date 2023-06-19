@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "Read from Blob",
+						"referenceName": "Read from Azure Blob Storage",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true,
@@ -207,6 +207,12 @@
 											]
 										}
 									],
+									"policy": {
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
 									"userProperties": [],
 									"typeProperties": {
 										"variableName": "convertedResult",
@@ -259,6 +265,12 @@
 											]
 										}
 									],
+									"policy": {
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
 									"userProperties": [],
 									"typeProperties": {
 										"variableName": "convertedResult",
@@ -315,6 +327,12 @@
 											]
 										}
 									],
+									"policy": {
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
 									"userProperties": [],
 									"typeProperties": {
 										"variableName": "convertedResult",
@@ -332,6 +350,12 @@
 							"name": "Set converted result",
 							"type": "SetVariable",
 							"dependsOn": [],
+							"policy": {
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "convertedResult",
