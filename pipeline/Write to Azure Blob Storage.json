@@ -1,9 +1,9 @@
 {
-	"name": "Write to Blob",
+	"name": "Write to Azure Blob Storage",
 	"properties": {
 		"activities": [
 			{
-				"name": "Save output to Blob",
+				"name": "Save Blob",
 				"type": "WebActivity",
 				"dependsOn": [],
 				"policy": {
