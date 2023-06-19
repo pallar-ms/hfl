@@ -22,7 +22,10 @@
 							"value": "@pipeline().parameters.acrServer",
 							"type": "Expression"
 						},
-						"templateReference": "hl7v2-v5.1:020701",
+						"templateReference": {
+							"value": "@pipeline().parameters.templateReference",
+							"type": "Expression"
+						},
 						"inputData": {
 							"value": "@pipeline().parameters.inputData",
 							"type": "Expression"
