@@ -34,7 +34,7 @@
 				}
 			},
 			{
-				"name": "Set converted result",
+				"name": "Set converted result output",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -66,7 +66,7 @@
 				}
 			},
 			{
-				"name": "Set converted error",
+				"name": "Set converted error output",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
