@@ -90,7 +90,7 @@
 				}
 			},
 			{
-				"name": "Set output results",
+				"name": "Set text analysis FHIR result output",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -100,6 +100,12 @@
 						]
 					}
 				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "pipelineReturnValue",
@@ -212,7 +218,7 @@
 			}
 		},
 		"folder": {
-			"name": "HFL/1. Transform/TA4H"
+			"name": "HFL/Transform/TA4H"
 		},
 		"annotations": [],
 		"lastPublishTime": "2023-03-23T19:00:36Z"
