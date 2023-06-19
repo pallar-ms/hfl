@@ -22,7 +22,10 @@
 							"value": "@pipeline().parameters.acrServer",
 							"type": "Expression"
 						},
-						"templateReference": "jsontemplates:default",
+						"templateReference": {
+							"value": "@pipeline().parameters.templateReference",
+							"type": "Expression"
+						},
 						"inputData": {
 							"value": "@pipeline().parameters.inputData",
 							"type": "Expression"
@@ -105,13 +108,18 @@
 				"type": "string"
 			},
 			"acrServer": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "microsofthealth"
 			},
 			"inputData": {
 				"type": "string"
 			},
 			"rootTemplate": {
 				"type": "string"
+			},
+			"templateReference": {
+				"type": "string",
+				"defaultValue": "jsontemplates:default"
 			}
 		},
 		"folder": {
