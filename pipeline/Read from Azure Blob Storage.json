@@ -31,7 +31,7 @@
 				}
 			},
 			{
-				"name": "Set blob content",
+				"name": "Set blob content output",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
