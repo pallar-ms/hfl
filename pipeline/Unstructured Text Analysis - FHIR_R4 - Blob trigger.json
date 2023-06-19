@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "Read from Blob",
+						"referenceName": "Read from Azure Blob Storage",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true,
