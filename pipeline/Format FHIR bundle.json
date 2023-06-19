@@ -37,6 +37,12 @@
 							"name": "Update FHIR resource",
 							"type": "SetVariable",
 							"dependsOn": [],
+							"policy": {
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "updatedFhirResource",
@@ -50,7 +56,7 @@
 				}
 			},
 			{
-				"name": "Set FHIR bundle",
+				"name": "Set FHIR bundle output",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -60,6 +66,12 @@
 						]
 					}
 				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "pipelineReturnValue",
@@ -90,7 +102,7 @@
 			}
 		},
 		"folder": {
-			"name": "HFL/1. Transform/Format"
+			"name": "HFL/Transform/Format"
 		},
 		"annotations": []
 	}
