@@ -1,9 +1,9 @@
 {
-	"name": "Write to Data Lake",
+	"name": "Write to Azure Data Lake",
 	"properties": {
 		"activities": [
 			{
-				"name": "Save output to Data Lake",
+				"name": "Save file",
 				"type": "WebActivity",
 				"dependsOn": [],
 				"policy": {
@@ -50,7 +50,7 @@
 			}
 		},
 		"folder": {
-			"name": "HFL/2. Load"
+			"name": "HFL/Load"
 		},
 		"annotations": [],
 		"lastPublishTime": "2023-03-22T20:40:53Z"
