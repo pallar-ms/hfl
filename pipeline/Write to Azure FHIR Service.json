@@ -1,9 +1,9 @@
 {
-	"name": "Write to HDS FHIR Service",
+	"name": "Write to Azure FHIR Service",
 	"properties": {
 		"activities": [
 			{
-				"name": "Save output to FHIR Service",
+				"name": "Save FHIR resource",
 				"type": "WebActivity",
 				"dependsOn": [],
 				"policy": {
@@ -43,7 +43,7 @@
 			}
 		},
 		"folder": {
-			"name": "HFL/2. Load"
+			"name": "HFL/Load"
 		},
 		"annotations": [],
 		"lastPublishTime": "2023-03-23T16:50:24Z"
