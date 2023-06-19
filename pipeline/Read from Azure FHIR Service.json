@@ -1,5 +1,5 @@
 {
-	"name": "Read from HDS FHIR Service",
+	"name": "Read from Azure FHIR Service",
 	"properties": {
 		"activities": [
 			{
