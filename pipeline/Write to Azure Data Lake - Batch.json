@@ -1,5 +1,5 @@
 {
-	"name": "Write to Data Lake - Batch",
+	"name": "Write to Azure Data Lake - Batch",
 	"properties": {
 		"activities": [
 			{
