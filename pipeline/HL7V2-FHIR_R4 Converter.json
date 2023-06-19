@@ -105,13 +105,18 @@
 				"type": "string"
 			},
 			"acrServer": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "microsofthealth"
 			},
 			"inputData": {
 				"type": "string"
 			},
 			"rootTemplate": {
 				"type": "string"
+			},
+			"templateReference": {
+				"type": "string",
+				"defaultValue": "hl7v2templates:default"
 			}
 		},
 		"folder": {
