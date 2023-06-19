@@ -36,7 +36,7 @@
 				}
 			},
 			{
-				"name": "Set converted result",
+				"name": "Set converted result output",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -46,6 +46,12 @@
 						]
 					}
 				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "pipelineReturnValue",
@@ -62,7 +68,7 @@
 				}
 			},
 			{
-				"name": "Set converted error",
+				"name": "Set converted error output",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -72,6 +78,12 @@
 						]
 					}
 				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "pipelineReturnValue",
@@ -103,7 +115,7 @@
 			}
 		},
 		"folder": {
-			"name": "HFL/1. Transform/Convert/Specific Converters"
+			"name": "HFL/Transform/Convert/Specific Converters"
 		},
 		"annotations": [],
 		"lastPublishTime": "2023-03-23T21:51:26Z"
