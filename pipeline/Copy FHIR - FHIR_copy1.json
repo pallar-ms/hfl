@@ -1,0 +1,157 @@
+{
+	"name": "Copy FHIR - FHIR_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy FHIR resources",
+				"type": "Until",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('Read from Azure FHIR Service').output.pipelineReturnValue.link.relation, 'self')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Format FHIR bundle",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Read from Azure FHIR Service",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Format FHIR bundle",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"inputResources": {
+										"value": "@activity('Read from Azure FHIR Service').output.pipelineReturnValue.resources",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Save to Azure FHIR service",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Format FHIR bundle",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Write to Azure FHIR Service",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"fhirService": {
+										"value": "@pipeline().parameters.targetFhirService",
+										"type": "Expression"
+									},
+									"fhirResource": {
+										"value": "@json(activity('Format FHIR bundle').output.pipelineReturnValue.fhirBundle)",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Set next link",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Format FHIR bundle",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "nextLink",
+								"value": {
+									"value": "@activity('Read from Azure FHIR Service').output.pipelineReturnValue.link.url",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Read from Azure FHIR Service",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Read from Azure FHIR Service",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"fhirService": {
+										"value": "@pipeline().parameters.sourceFhirService",
+										"type": "Expression"
+									},
+									"fhirResourceType": {
+										"value": "@pipeline().parameters.fhirResourceType",
+										"type": "Expression"
+									},
+									"inputUrl": {
+										"value": "@variables('nextLink')",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					],
+					"timeout": "0.12:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"sourceFhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+			},
+			"fhirResourceType": {
+				"type": "string",
+				"defaultValue": "Patient"
+			},
+			"targetFhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com"
+			}
+		},
+		"variables": {
+			"updatedFhirResource": {
+				"type": "String"
+			},
+			"nextLink": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "HFL/Pipelines/Copy"
+		},
+		"annotations": []
+	}
+}
