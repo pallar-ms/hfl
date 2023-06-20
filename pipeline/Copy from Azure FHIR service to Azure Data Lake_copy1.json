@@ -1,0 +1,139 @@
+{
+	"name": "Copy from Azure FHIR service to Azure Data Lake_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy FHIR resources",
+				"type": "Until",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('Read from Azure FHIR Service').output.pipelineReturnValue.link.relation, 'self')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Save to Azure Data Lake",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Read from Azure FHIR Service",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Write to Azure Data Lake - Batch",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"storageAccount": {
+										"value": "@pipeline().parameters.targetDataLake",
+										"type": "Expression"
+									},
+									"storageFolder": {
+										"value": "@concat(pipeline().parameters.targetDataLakeFolder, '/', pipeline().parameters.fhirResourceType)",
+										"type": "Expression"
+									},
+									"inputData": {
+										"value": "@activity('Read from Azure FHIR Service').output.pipelineReturnValue.resources",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Set next link",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Read from Azure FHIR Service",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "nextLink",
+								"value": {
+									"value": "@activity('Read from Azure FHIR Service').output.pipelineReturnValue.link.url",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Read from Azure FHIR Service",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Read from Azure FHIR Service",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"fhirService": {
+										"value": "@pipeline().parameters.sourceFhirService",
+										"type": "Expression"
+									},
+									"fhirResourceType": {
+										"value": "@pipeline().parameters.fhirResourceType",
+										"type": "Expression"
+									},
+									"inputUrl": {
+										"value": "@variables('nextLink')",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					],
+					"timeout": "0.12:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"sourceFhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+			},
+			"fhirResourceType": {
+				"type": "string",
+				"defaultValue": "Patient"
+			},
+			"targetDataLake": {
+				"type": "string",
+				"defaultValue": "https://pallardatalake.blob.core.windows.net"
+			},
+			"targetDataLakeFolder": {
+				"type": "string",
+				"defaultValue": "fhir"
+			}
+		},
+		"variables": {
+			"updatedFhirResource": {
+				"type": "String"
+			},
+			"nextLink": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "HFL/Pipelines/Copy"
+		},
+		"annotations": []
+	}
+}
