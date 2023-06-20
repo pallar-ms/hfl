@@ -6,7 +6,13 @@
 		"Until"
 	],
 	"author": "pallar@microsoft.com",
-	"annotations": [],
+	"annotations": [
+		"Azure Health Data Services",
+		"Copy",
+		"Data Movement",
+		"FHIR",
+		"Health"
+	],
 	"services": [],
 	"categories": []
 }
