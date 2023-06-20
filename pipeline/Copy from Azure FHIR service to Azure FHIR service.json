@@ -1,5 +1,5 @@
 {
-	"name": "Copy FHIR - FHIR",
+	"name": "Copy from Azure FHIR service to Azure FHIR service",
 	"properties": {
 		"activities": [
 			{
@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('Read from HDS FHIR Service').output.pipelineReturnValue.link.relation, 'self')",
+						"value": "@equals(activity('Read from Azure FHIR Service').output.pipelineReturnValue.link.relation, 'self')",
 						"type": "Expression"
 					},
 					"activities": [
@@ -18,7 +18,7 @@
 							"type": "ExecutePipeline",
 							"dependsOn": [
 								{
-									"activity": "Read from HDS FHIR Service",
+									"activity": "Read from Azure FHIR Service",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -33,14 +33,14 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"inputResources": {
-										"value": "@activity('Read from HDS FHIR Service').output.pipelineReturnValue.resources",
+										"value": "@activity('Read from Azure FHIR Service').output.pipelineReturnValue.resources",
 										"type": "Expression"
 									}
 								}
 							}
 						},
 						{
-							"name": "Save to FHIR service",
+							"name": "Save to Azure FHIR service",
 							"type": "ExecutePipeline",
 							"dependsOn": [
 								{
@@ -53,7 +53,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "Write to HDS FHIR Service",
+									"referenceName": "Write to Azure FHIR Service",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
@@ -80,23 +80,29 @@
 									]
 								}
 							],
+							"policy": {
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "nextLink",
 								"value": {
-									"value": "@activity('Read from HDS FHIR Service').output.pipelineReturnValue.link.url",
+									"value": "@activity('Read from Azure FHIR Service').output.pipelineReturnValue.link.url",
 									"type": "Expression"
 								}
 							}
 						},
 						{
-							"name": "Read from HDS FHIR Service",
+							"name": "Read from Azure FHIR Service",
 							"type": "ExecutePipeline",
 							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "Read from HDS FHIR Service",
+									"referenceName": "Read from Azure FHIR Service",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
@@ -123,16 +129,13 @@
 		],
 		"parameters": {
 			"sourceFhirService": {
-				"type": "string",
-				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+				"type": "string"
 			},
 			"fhirResourceType": {
-				"type": "string",
-				"defaultValue": "Patient"
+				"type": "string"
 			},
 			"targetFhirService": {
-				"type": "string",
-				"defaultValue": "https://prta4hws-pr-ta4h-fhir.fhir.azurehealthcareapis.com"
+				"type": "string"
 			}
 		},
 		"variables": {
