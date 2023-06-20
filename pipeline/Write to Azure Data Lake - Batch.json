@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Save each input data",
+				"name": "Save each file",
 				"type": "ForEach",
 				"dependsOn": [],
 				"userProperties": [],
