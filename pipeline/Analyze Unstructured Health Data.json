@@ -1,0 +1,227 @@
+{
+	"name": "Analyze Unstructured Health Data",
+	"properties": {
+		"description": "Performs health text analysis using Text Analytics for Health in Cognitive Services and yields transformed FHIR R4 bundles.",
+		"activities": [
+			{
+				"name": "Analyze Unstructured Health Text",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Construct text analysis input",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.cognitiveServiceUrl,'/language/analyze-text/jobs?api-version=2022-05-15-preview')",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json",
+						"Ocp-Apim-Subscription-Key": {
+							"value": "@pipeline().parameters.ocpApimSubscriptionKey",
+							"type": "Expression"
+						}
+					},
+					"body": {
+						"value": "{\"analysisInput\":{\"documents\":@{variables('inputDocuments')}},\"tasks\":[{\"taskId\":\"analyze 1\",\"kind\":\"Healthcare\",\"parameters\":{\"fhirVersion\":\"4.0.1\"}}]}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Until Job Completion",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "Analyze Unstructured Health Text",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('Get Text Analysis Job Result').output.tasks.completed, activity('Get Text Analysis Job Result').output.tasks.total)",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Get Text Analysis Job Result",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "@activity('Analyze Unstructured Health Text').output.ADFWebActivityResponseHeaders['operation-location']",
+									"type": "Expression"
+								},
+								"method": "GET",
+								"headers": {
+									"Content-Type": "application/json",
+									"Ocp-Apim-Subscription-Key": {
+										"value": "@pipeline().parameters.ocpApimSubscriptionKey",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					],
+					"timeout": "0.12:00:00"
+				}
+			},
+			{
+				"name": "Set text analysis FHIR result output",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Extract FHIR bundles generated",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "fhirBundlesOutput",
+							"value": {
+								"type": "Expression",
+								"content": "@variables('fhirBundlesOutput')"
+							}
+						},
+						{
+							"key": "rawTA4HOutput",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('Get Text Analysis Job Result').output"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			},
+			{
+				"name": "Extract FHIR bundles generated",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Until Job Completion",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [
+					{
+						"name": "r",
+						"value": "rr"
+					}
+				],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Text Analysis Job Result').output.tasks.items[0].results.documents",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Append variable1",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "fhirBundlesOutput",
+								"value": {
+									"value": "@item().fhirBundle",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Construct text analysis input",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.inputData",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Append document",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "inputDocuments",
+								"value": {
+									"value": "@json(concat('{\"text\": \"', item(), '\", \"language\": \"en\", \"id\": \"', string(rand(1, 1000)), '\"}'))",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"cognitiveServiceUrl": {
+				"type": "string"
+			},
+			"inputData": {
+				"type": "array"
+			},
+			"ocpApimSubscriptionKey": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"fhirBundlesOutput": {
+				"type": "Array"
+			},
+			"inputDocuments": {
+				"type": "Array"
+			},
+			"analysisInput": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Transform/Text Analysis for Healthcare"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-23T19:00:36Z"
+	}
+}
