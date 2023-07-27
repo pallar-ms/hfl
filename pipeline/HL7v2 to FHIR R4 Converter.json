@@ -1,0 +1,129 @@
+{
+	"name": "HL7v2 to FHIR R4 Converter",
+	"properties": {
+		"description": "Performs the conversion of HL7v2 data to FHIR R4 bundles. ",
+		"activities": [
+			{
+				"name": "HL7v2 to FHIR R4 Converter",
+				"description": "Performs the conversion of HL7v2 data to FHIR R4 bundles. ",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Generic FHIR R4 Converter",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"fhirService": {
+							"value": "@pipeline().parameters.fhirService",
+							"type": "Expression"
+						},
+						"acrServer": {
+							"value": "@pipeline().parameters.acrServer",
+							"type": "Expression"
+						},
+						"templateReference": {
+							"value": "@pipeline().parameters.templateReference",
+							"type": "Expression"
+						},
+						"inputData": {
+							"value": "@pipeline().parameters.inputData",
+							"type": "Expression"
+						},
+						"inputDataType": "Hl7v2",
+						"rootTemplate": {
+							"value": "@pipeline().parameters.rootTemplate",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Set converted result output",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "HL7v2 to FHIR R4 Converter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "convertResult",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('HL7v2 to FHIR R4 Converter').output.pipelineReturnValue.convertResult"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			},
+			{
+				"name": "Set converted error output",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "HL7v2 to FHIR R4 Converter",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "convertError",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('HL7v2 to FHIR R4 Converter').output.pipelineReturnValue.convertError"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			}
+		],
+		"parameters": {
+			"fhirService": {
+				"type": "string"
+			},
+			"acrServer": {
+				"type": "string",
+				"defaultValue": "microsofthealth"
+			},
+			"templateReference": {
+				"type": "string",
+				"defaultValue": "hl7v2templates:default"
+			},
+			"inputData": {
+				"type": "string"
+			},
+			"rootTemplate": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Transform/Convert/Specific Converters"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-23T21:51:27Z"
+	}
+}

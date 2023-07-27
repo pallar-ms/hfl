@@ -1,0 +1,204 @@
+{
+	"name": "Transform HL7v2 health data to FHIR R4 format and write to ADLS Gen2",
+	"properties": {
+		"description": "Transforms HL7v2 messages read from an Azure Data Lake Storage (ADLS) Gen2 or Azure Blob Storage account, to FHIR R4 format, and persists transformed FHIR bundle result into ADLS Gen2 or Blob Storage account.\nBy default if no ACR template configuration is provided (for custom conversion templates), the Microsoft published conversion liquid templates will be used.",
+		"activities": [
+			{
+				"name": "Read input data",
+				"description": "Reads input data from specified ADLS Gen2 or Blob Storage account, containing unstructured health text to be analyzed and transformed into FHIR R4.",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Read from ADLS Gen2 or Blob Storage",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.inputStorageAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.inputStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@pipeline().parameters.inputStorageFile",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "HL7v2 to FHIR R4 Converter",
+				"description": "Performs the conversion of HL7v2 data to FHIR R4 bundles. ",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Read input data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "HL7v2 to FHIR R4 Converter",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"fhirService": {
+							"value": "@pipeline().parameters.fhirService",
+							"type": "Expression"
+						},
+						"acrServer": {
+							"value": "@pipeline().parameters.acrServer",
+							"type": "Expression"
+						},
+						"templateReference": {
+							"value": "@pipeline().parameters.templateReference",
+							"type": "Expression"
+						},
+						"inputData": {
+							"value": "@activity('Read input data').output.pipelineReturnValue.blobData",
+							"type": "Expression"
+						},
+						"rootTemplate": {
+							"value": "@pipeline().parameters.rootTemplate",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Write converted result to ADLS Gen2",
+				"description": "Writes the converted result (i.e., FHIR bundle resource) to the specified ADLS Gen2 or Blob Storage account.",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "HL7v2 to FHIR R4 Converter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to ADLS Gen2 or Blob Storage",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.outputStorageAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.outputStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.inputStorageFile}_@{replace(utcnow(), ':','-')}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@activity('HL7v2 to FHIR R4 Converter').output.pipelineReturnValue.convertResult",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Write errors to ADLS Gen2",
+				"description": "Writes the errors encountered during conversion to the specified ADLS Gen2 or Blob Storage account.",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "HL7v2 to FHIR R4 Converter",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Write to ADLS Gen2 or Blob Storage",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"storageAccount": {
+							"value": "@pipeline().parameters.outputStorageAccount",
+							"type": "Expression"
+						},
+						"storageFolder": {
+							"value": "@pipeline().parameters.errorStorageFolder",
+							"type": "Expression"
+						},
+						"storageFile": {
+							"value": "@{pipeline().parameters.inputStorageFile}_@{utcnow()}.json",
+							"type": "Expression"
+						},
+						"fileContent": {
+							"value": "@activity('HL7v2 to FHIR R4 Converter').output.pipelineReturnValue.convertError",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"fhirService": {
+				"type": "string",
+				"defaultValue": "https://prta4hws-pr-adf-fhir.fhir.azurehealthcareapis.com/"
+			},
+			"acrServer": {
+				"type": "string",
+				"defaultValue": "microsofthealth"
+			},
+			"templateReference": {
+				"type": "string",
+				"defaultValue": "hl7v2templates:default"
+			},
+			"inputStorageAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardts.blob.core.windows.net"
+			},
+			"inputStorageFolder": {
+				"type": "string",
+				"defaultValue": "convert-samples/hl7v2"
+			},
+			"inputStorageFile": {
+				"type": "string",
+				"defaultValue": "ADT-A01-00.hl7"
+			},
+			"outputStorageAccount": {
+				"type": "string",
+				"defaultValue": "https://pallardatalake.blob.core.windows.net"
+			},
+			"outputStorageFolder": {
+				"type": "string",
+				"defaultValue": "convert-fabric-demo/hl7v2"
+			},
+			"rootTemplate": {
+				"type": "string",
+				"defaultValue": "ADT_A01"
+			},
+			"errorStorageFolder": {
+				"type": "string",
+				"defaultValue": "errors/hl7-v2"
+			}
+		},
+		"folder": {
+			"name": "Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-23T21:51:27Z"
+	}
+}

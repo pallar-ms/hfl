@@ -1,0 +1,82 @@
+{
+	"name": "Read from ADLS Gen2 or Blob Storage",
+	"properties": {
+		"description": "Reads blob file contents from specified Azure Data Lake Storage Gen2 account or Azure Blob Storage account.",
+		"activities": [
+			{
+				"name": "Get Blob",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.storageAccount,'/',pipeline().parameters.storageFolder,'/',pipeline().parameters.storageFile)",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob",
+						"x-ms-version": "2017-11-09"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
+					}
+				}
+			},
+			{
+				"name": "Set blob content output",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get Blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "blobData",
+							"value": {
+								"type": "Expression",
+								"content": "@activity('Get Blob').output.Response"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			}
+		],
+		"parameters": {
+			"storageAccount": {
+				"type": "string"
+			},
+			"storageFolder": {
+				"type": "string"
+			},
+			"storageFile": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Extract"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-22T20:40:53Z"
+	}
+}

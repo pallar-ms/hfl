@@ -1,0 +1,59 @@
+{
+	"name": "Write to ADLS Gen2 or Blob Storage",
+	"properties": {
+		"description": "Writes to files in the specified Azure Data Lake Storage Gen2 account or Azure Blob Storage account.",
+		"activities": [
+			{
+				"name": "Save file",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().parameters.storageAccount,'/',pipeline().parameters.storageFolder,'/',pipeline().parameters.storageFile)",
+						"type": "Expression"
+					},
+					"method": "PUT",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob",
+						"x-ms-version": "2017-11-09"
+					},
+					"body": {
+						"value": "@pipeline().parameters.fileContent",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"storageAccount": {
+				"type": "string"
+			},
+			"storageFolder": {
+				"type": "string"
+			},
+			"storageFile": {
+				"type": "string"
+			},
+			"fileContent": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Load"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-22T20:40:53Z"
+	}
+}
